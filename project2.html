@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turtle Project - Meghan Donovan</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <h1>Turtle Project</h1>
+        <hr>
+        <p>Meghan Donovan | CS110</p>
+    </header>
+
+    <main>
+
+        <section>
+            <h2>About the Project</h2>
+            <p>
+                This project is about creating a graphical scene using Python's Turtle graphics module.
+                My scene features a house with a pink roof, a layered green tree, a golden sun with rays,
+                white clouds, and an orangeish red flower. I used the provided building block functions
+                such as draw_rectangle, draw_triangle, draw_circle, and jump_to to create composite
+                shapes that make up the full scene. Each element of the scene is drawn using its own
+                set of function calls inside draw_scene, keeping the code organized and readable.
+                This was my first time working with Turtle graphics and it helped me understand how
+                coordinates, colors, and shapes work together in Python.
+            </p>
+        </section>
+
+        <section>
+            <h2>Sample Code</h2>
+            <p>
+                This code draws the tree using a brown rectangle for the trunk and three layered
+                triangles in different shades of green to create depth and a realistic look:
+            </p>
+            <br>
+            <p>
+                &bull; <strong>t</strong>: The turtle graphics object for drawing<br>
+                &bull; <strong>jump_to(t, x, y)</strong>: Moves the turtle to a position without drawing
+            </p>
+            <br>
+            <pre style="background-color: #e7f5eab0; padding: 15px; border-radius: 6px; border-left: 4px solid #1e5a30; overflow-x: auto; font-size: 0.95rem;"><code># treetrunk
+jump_to(t, -200, -90)
+draw_rectangle(t, 20, 60, "salmon4")
+
+# treeleaves1 bottom
+jump_to(t, -225, -90)
+draw_triangle(t, 70, "darkgreen")
+
+# treeleaves2 middle
+jump_to(t, -215, -50)
+draw_triangle(t, 50, "green")
+
+# treeleaves3 top
+jump_to(t, -207, -15)
+draw_triangle(t, 35, "limegreen")</code></pre>
+        </section>
+
+        <section>
+            <h2>Final Scene</h2>
+            <p>
+                Here's the completed turtle graphics scene featuring a purple house with a pink roof,
+                a layered green tree, a golden sun with rays, white clouds, and an orangeish red flower
+                on a sky blue background:
+            </p>
+            <br>
+            <img src="turtle_scene.png"
+                 alt="Turtle Graphics Scene - A purple house with pink roof, layered green tree, golden sun, white clouds, and red flower on sky blue background"
+                 style="max-width: 100%; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); display: block; margin: 0 auto;">
+            <br>
+            <p>
+                The scene combines multiple composite shapes built from basic turtle graphics functions.
+                The house uses rectangles for the base, window, and door, with a triangle for the pink roof.
+                The tree is built from three layered triangles in darkgreen, green, and limegreen on a
+                salmon4 trunk. The sun uses a filled gold circle with 12 rays drawn in a loop, and the
+                clouds are made from three overlapping white circles. The flower is a small orangered4
+                circle on top of a straight stem.
+            </p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Meghan Donovan</p>
+    </footer>
+
+</body>
+</html>
