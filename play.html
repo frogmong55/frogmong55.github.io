@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Lily and Meg's Adventure — A Eugene, Oregon RPG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --uo-green:#154733;
+    --uo-yellow:#FEE123;
+    --sky:#bfe3f0;
+    --dirt:#8a5a33;
+    --cream:#fdf6e3;
+    --ink:#1d2a23;
+    --danger:#c0392b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background:var(--uo-green);
+    color:var(--cream);
+    overflow:hidden;
+    user-select:none;
+  }
+  .screen{
+    position:fixed;inset:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:18px;padding:20px;text-align:center;
+    background:
+      radial-gradient(circle at 50% 110%, #1f6647 0%, var(--uo-green) 60%);
+    z-index:10;
+  }
+  .hidden{display:none !important;}
+  h1.title{
+    font-family:'Rye',serif;
+    font-size:clamp(2rem,7vw,4.2rem);
+    color:var(--uo-yellow);
+    text-shadow:4px 4px 0 #0c2b1e;
+    line-height:1.1;
+  }
+  .subtitle{
+    font-size:clamp(.95rem,2.5vw,1.2rem);
+    max-width:560px;
+    color:#dff0e4;
+  }
+  .wanted-banner{
+    font-family:'Rye',serif;
+    letter-spacing:.25em;
+    color:var(--uo-yellow);
+    border-top:2px solid var(--uo-yellow);
+    border-bottom:2px solid var(--uo-yellow);
+    padding:6px 16px;
+    font-size:clamp(.7rem,2vw,.95rem);
+  }
+  button.btn{
+    font-family:'Rye',serif;
+    font-size:clamp(1rem,3vw,1.3rem);
+    background:var(--uo-yellow);
+    color:var(--uo-green);
+    border:none;border-radius:10px;
+    padding:14px 34px;
+    cursor:pointer;
+    box-shadow:0 5px 0 #b8a200;
+    transition:transform .08s;
+  }
+  button.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #b8a200;}
+  .char-row{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;}
+  .char-card{
+    background:var(--cream);
+    color:var(--ink);
+    border-radius:16px;
+    padding:14px;
+    width:min(230px,42vw);
+    cursor:pointer;
+    border:5px solid transparent;
+    transition:transform .12s,border-color .12s;
+  }
+  .char-card:hover{transform:translateY(-6px) rotate(-1deg);}
+  .char-card.selected{border-color:var(--uo-yellow);transform:translateY(-6px);}
+  .char-card img{
+    width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;
+    border-radius:10px;
+  }
+  .char-card h3{font-family:'Rye',serif;margin-top:10px;font-size:1.3rem;color:var(--uo-green);}
+  .char-card p{font-size:.8rem;line-height:1.4;margin-top:4px;}
+  .controls-hint{font-size:.8rem;color:#bcd9c6;max-width:520px;line-height:1.6;}
+  kbd{
+    background:#0c2b1e;border-radius:5px;padding:1px 7px;
+    font-family:'Nunito';font-weight:700;color:var(--uo-yellow);
+    border:1px solid #2d6b4d;
+  }
+
+  /* ---- game layer ---- */
+  #gameWrap{position:fixed;inset:0;background:var(--sky);}
+  canvas{display:block;width:100%;height:100%;image-rendering:pixelated;}
+  #hud{
+    position:fixed;top:0;left:0;right:0;
+    display:flex;align-items:center;gap:14px;
+    padding:10px 14px;
+    pointer-events:none;
+    z-index:5;
+  }
+  #hudFace{
+    width:52px;height:52px;border-radius:50%;
+    object-fit:cover;object-position:top;
+    border:3px solid var(--uo-yellow);
+    background:#fff;
+  }
+  #hearts{font-size:1.4rem;letter-spacing:2px;filter:drop-shadow(1px 2px 0 rgba(0,0,0,.3));}
+  #coinBox{
+    font-weight:900;color:var(--uo-green);
+    background:var(--uo-yellow);
+    border-radius:99px;padding:4px 14px;
+    box-shadow:0 3px 0 rgba(0,0,0,.25);
+  }
+  #zoneName{
+    margin-left:auto;
+    font-family:'Rye',serif;
+    color:var(--uo-green);
+    background:rgba(253,246,227,.85);
+    padding:4px 14px;border-radius:8px;
+    font-size:clamp(.7rem,2.2vw,1rem);
+  }
+
+  /* dialogue */
+  #dialogue{
+    position:fixed;left:50%;bottom:110px;transform:translateX(-50%);
+    width:min(640px,92vw);
+    background:var(--cream);color:var(--ink);
+    border:4px solid var(--uo-green);
+    border-radius:14px;
+    padding:16px 18px;
+    z-index:6;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  #dialogue h4{font-family:'Rye',serif;color:var(--uo-green);margin-bottom:6px;}
+  #dialogue p{font-size:.95rem;line-height:1.5;margin-bottom:12px;}
+  .choices{display:flex;gap:10px;flex-wrap:wrap;}
+  .choices button{
+    flex:1;min-width:150px;
+    font-family:'Nunito';font-weight:900;font-size:.85rem;
+    background:var(--uo-green);color:var(--cream);
+    border:none;border-radius:9px;padding:10px 12px;cursor:pointer;
+  }
+  .choices button:hover{background:#1f6647;}
+
+  /* touch controls */
+  #touch{
+    position:fixed;bottom:0;left:0;right:0;
+    display:flex;justify-content:space-between;
+    padding:14px 16px;z-index:5;
+  }
+  .tgroup{display:flex;gap:12px;}
+  .tbtn{
+    width:64px;height:64px;border-radius:50%;
+    background:rgba(21,71,51,.55);
+    border:3px solid rgba(254,225,35,.8);
+    color:var(--uo-yellow);
+    font-size:1.5rem;font-weight:900;
+    display:flex;align-items:center;justify-content:center;
+    touch-action:none;
+  }
+  @media (hover:hover) and (pointer:fine){ #touch{display:none;} }
+
+  /* toast */
+  #toast{
+    position:fixed;top:74px;left:50%;transform:translateX(-50%);
+    background:var(--uo-green);color:var(--uo-yellow);
+    font-weight:900;padding:8px 20px;border-radius:99px;
+    z-index:7;opacity:0;transition:opacity .3s;
+    border:2px solid var(--uo-yellow);
+    pointer-events:none;
+    font-size:.9rem;text-align:center;
+  }
+  .photo-credit{font-size:.65rem;color:#7fae92;}
+</style>
+</head>
+<body>
+
+<!-- ============ TITLE SCREEN ============ -->
+<div id="titleScreen" class="screen">
+  <div class="wanted-banner">★ A EUGENE, OREGON ADVENTURE ★</div>
+  <h1 class="title">Lily &amp; Meg's<br>Adventure</h1>
+  <p class="subtitle">The legendary <b>Golden Duck Statue</b> has been stolen from Hayward Field and hidden on the summit of Spencer Butte! Run, jump, and whip your way across Eugene's most famous landmarks to get it back.</p>
+  <button class="btn" id="startBtn">Start the Adventure</button>
+  <p class="controls-hint">
+    <kbd>←</kbd><kbd>→</kbd> or <kbd>A</kbd><kbd>D</kbd> move &nbsp;•&nbsp;
+    <kbd>↑</kbd> / <kbd>W</kbd> / <kbd>Space</kbd> jump &nbsp;•&nbsp;
+    <kbd>X</kbd> or <kbd>J</kbd> whip attack<br>
+    On a phone? Touch buttons appear automatically.
+  </p>
+</div>
+
+<!-- ============ CHARACTER SELECT ============ -->
+<div id="charScreen" class="screen hidden">
+  <h1 class="title" style="font-size:clamp(1.6rem,5vw,2.6rem)">Choose Your Hero</h1>
+  <div class="char-row">
+    <div class="char-card" id="cardMeg" onclick="selectChar('meg')">
+      <img src="Meg.jpg" alt="Meg">
+      <h3>Meg</h3>
+      <p>Tough as old growth timber. Her whip swing is a little stronger, and she starts with an extra heart.</p>
+    </div>
+    <div class="char-card" id="cardLily" onclick="selectChar('lily')">
+      <img src="lily.png" alt="Lily">
+      <h3>Lily &amp; Mako</h3>
+      <p>Quick on her feet, and her cat Mako tags along — Mako sniffs out bonus Duck Bucks as you explore.</p>
+    </div>
+  </div>
+  <button class="btn" id="playBtn" disabled style="opacity:.5">Ride Out</button>
+</div>
+
+<!-- ============ WIN SCREEN ============ -->
+<div id="winScreen" class="screen hidden">
+  <div class="wanted-banner">★ REWARD CLAIMED ★</div>
+  <h1 class="title" style="font-size:clamp(1.8rem,6vw,3.2rem)">The Golden Duck<br>Is Safe!</h1>
+  <p class="subtitle" id="winText"></p>
+  <button class="btn" onclick="location.reload()">Play Again</button>
+</div>
+
+<!-- ============ GAME ============ -->
+<div id="gameWrap" class="hidden">
+  <canvas id="game"></canvas>
+  <div id="hud">
+    <img id="hudFace" src="Meg.jpg" alt="">
+    <span id="hearts"></span>
+    <span id="coinBox">🦆 0</span>
+    <span id="zoneName">Willamette Riverfront</span>
+  </div>
+  <div id="dialogue" class="hidden">
+    <h4 id="dTitle"></h4>
+    <p id="dText"></p>
+    <div class="choices" id="dChoices"></div>
+  </div>
+  <div id="toast"></div>
+  <div id="touch">
+    <div class="tgroup">
+      <div class="tbtn" id="tLeft">◀</div>
+      <div class="tbtn" id="tRight">▶</div>
+    </div>
+    <div class="tgroup">
+      <div class="tbtn" id="tAttack">✦</div>
+      <div class="tbtn" id="tJump">▲</div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* =====================================================
+   LILY & MEG'S ADVENTURE
+   A Cactus-McCoy-inspired side-scroller set in Eugene, OR
+   ===================================================== */
+
+// ---------- screens & character select ----------
+let chosen = null;
+const $ = id => document.getElementById(id);
+
+$('startBtn').onclick = () => { $('titleScreen').classList.add('hidden'); $('charScreen').classList.remove('hidden'); };
+
+function selectChar(c){
+  chosen = c;
+  $('cardMeg').classList.toggle('selected', c==='meg');
+  $('cardLily').classList.toggle('selected', c==='lily');
+  const b = $('playBtn'); b.disabled = false; b.style.opacity = 1;
+}
+window.selectChar = selectChar;
+
+$('playBtn').onclick = () => {
+  if(!chosen) return;
+  $('charScreen').classList.add('hidden');
+  $('gameWrap').classList.remove('hidden');
+  startGame(chosen);
+};
+
+// ---------- canvas setup ----------
+const cv = $('game'), ctx = cv.getContext('2d');
+let W=0,H=0,SCALE=1;
+function resize(){
+  W = cv.width  = window.innerWidth  * devicePixelRatio;
+  H = cv.height = window.innerHeight * devicePixelRatio;
+  SCALE = H / 560;   // the world is 560 units tall — always fit it to the screen
+}
+window.addEventListener('resize', resize); resize();
+
+// ---------- world definition ----------
+const WORLD_W = 7600;
+const GROUND_Y = 470;          // world units; world is ~560 tall
+const GRAV = 0.62, MOVE = 0.85, MAXVX = 5.2, JUMP = -12.6, FRICTION = 0.82;
+
+// gaps in the ground = the Willamette river / mill race
+const gaps = [ [1280,1420], [2980,3120], [4660,4830], [6120,6260] ];
+
+// floating platforms  [x, y, w]
+const plats = [
+  [1240,395,80],[1330,350,90],          // river hop 1
+  [1700,380,110],[2150,360,120],
+  [2930,390,90],[3040,345,100],         // river hop 2
+  [3450,370,130],[3900,330,110],
+  [4600,400,80],[4700,355,90],[4790,395,80],  // river hop 3
+  [5200,360,140],[5650,330,120],
+  [6080,395,80],[6180,350,95],          // river hop 4
+  [6600,370,130],[6950,320,120],[7180,275,110]  // climb to summit
+];
+
+// zones / landmarks  [startX, name]
+const zones = [
+  [0,    "Willamette Riverfront"],
+  [1450, "Skinner Butte"],
+  [2700, "Eugene Saturday Market"],
+  [4000, "Hayward Field"],
+  [5350, "Autzen Stadium"],
+  [6500, "Spencer Butte Summit Trail"]
+];
+
+// coins (Duck Bucks)
+let coins = [];
+function seedCoins(){
+  coins = [];
+  const spots = [300,420,540,900,1050,1265,1370,1740,1980,2180,2400,2620,
+                 2960,3075,3300,3490,3700,3940,4200,4420,4630,4725,4815,
+                 5000,5240,5500,5690,5900,6110,6210,6450,6640,6850,6990,7210,7350];
+  for(const x of spots){
+    let y = GROUND_Y - 60;
+    for(const p of plats){ if(x>=p[0]-10 && x<=p[0]+p[2]+10) y = p[1]-42; }
+    coins.push({x, y, taken:false, t:Math.random()*6});
+  }
+}
+
+// enemies
+let enemies = [];
+function seedEnemies(){
+  enemies = [
+    goose(760), goose(1850), cloud(1100,330), football(2300),
+    goose(2550), cloud(2870,300), goose(3350), football(3650),
+    cloud(3520,310), goose(4150), football(4350), goose(4980),
+    cloud(4740,300), goose(5450), football(5750), goose(5980),
+    cloud(6160,305), goose(6700), football(7050), goose(7300)
+  ];
+}
+function goose(x){ return {kind:'goose', x, y:GROUND_Y-34, w:34, h:34, dir:1, range:[x-110,x+110], hp:2, dead:false, t:Math.random()*9}; }
+function cloud(x,y){ return {kind:'cloud', x, y, baseY:y, w:46, h:30, hp:2, dead:false, t:Math.random()*9}; }
+function football(x){ return {kind:'ball', x, y:GROUND_Y-26, w:26, h:26, vy:0, dir:1, range:[x-140,x+140], hp:1, dead:false, t:0}; }
+
+// landmark dialogue events  {x, title, text, choices:[{label, effect, toast}]}
+let events;
+function seedEvents(){
+  events = [
+    { x:1500, done:false, title:"Skinner Butte",
+      text:"You reach the foot of Skinner Butte, the big hill watching over downtown. A friendly hiker waves. \"The trail's steep — want a granola bar, or a tip about the path ahead?\"",
+      choices:[
+        {label:"Take the granola bar (+1 heart)", effect:s=>{s.hp=Math.min(s.maxHp,s.hp+1);}, toast:"+1 heart!"},
+        {label:"Take the tip (+5 Duck Bucks)", effect:s=>{s.coins+=5;}, toast:"\"Mind the geese by the river!\" +5 🦆"}
+      ]},
+    { x:2780, done:false, title:"Eugene Saturday Market",
+      text:"Stalls, music, and the smell of fresh bread — it's the Saturday Market! A vendor admires your courage. \"Trade you, traveler. What'll it be?\"",
+      choices:[
+        {label:"Hearty soup (+1 heart)", effect:s=>{s.hp=Math.min(s.maxHp,s.hp+1);}, toast:"Warm and restored! +1 heart"},
+        {label:"Lucky tie-dye bandana (+8 🦆)", effect:s=>{s.coins+=8;}, toast:"Stylish AND profitable! +8 🦆"}
+      ]},
+    { x:4080, done:false, title:"Hayward Field",
+      text:"The legendary track at Hayward Field gleams. A coach jogs over: \"This is where the Golden Duck was stolen! Take a lap with me and I'll teach you something.\"",
+      choices:[
+        {label:"Sprint training (move faster!)", effect:s=>{s.speedBoost=1.18;}, toast:"Track speed unlocked! 🏃"},
+        {label:"High-jump drills (jump higher!)", effect:s=>{s.jumpBoost=1.1;}, toast:"Hayward hops unlocked! ⬆"}
+      ]},
+    { x:5430, done:false, title:"Autzen Stadium",
+      text:"Autzen Stadium roars even when it's empty. A groundskeeper leans on his rake: \"The thief headed for Spencer Butte. It gets rough out there — pick your boost.\"",
+      choices:[
+        {label:"Full heal + 1 max heart", effect:s=>{s.maxHp+=1; s.hp=s.maxHp;}, toast:"GO DUCKS! Max hearts up!"},
+        {label:"Pocketful of Duck Bucks (+12)", effect:s=>{s.coins+=12;}, toast:"Cha-ching! +12 🦆"}
+      ]},
+    { x:6560, done:false, title:"Spencer Butte Trailhead",
+      text:"The summit trail rises ahead through the firs. Almost there. Mist rolls in... the Golden Duck glints somewhere above. One last push!",
+      choices:[
+        {label:"Let's finish this!", effect:()=>{}, toast:"To the summit!"}
+      ]}
+  ];
+}
+
+// ---------- player ----------
+let P, cam, running=false, paused=false, won=false;
+let mako = null;
+
+function startGame(char){
+  seedCoins(); seedEnemies(); seedEvents();
+  P = {
+    char,
+    x:120, y:GROUND_Y-60, w:30, h:56,
+    vx:0, vy:0, onGround:false, face:1,
+    hp: char==='meg'?4:3,
+    maxHp: char==='meg'?4:3,
+    coins:0,
+    atkPower: char==='meg'?2:1,
+    speedBoost:1, jumpBoost:1,
+    attackT:0, hurtT:0, checkpoint:{x:120,y:GROUND_Y-60},
+    walkT:0
+  };
+  if(char==='lily') mako = {x:60,y:GROUND_Y-20,vx:0,vy:0,t:0, sniffT:0};
+  else mako = null;
+  $('hudFace').src = char==='meg' ? 'Meg.jpg' : 'lily.png';
+  cam = {x:0};
+  running = true; won=false;
+  updateHud();
+  requestAnimationFrame(loop);
+}
+
+// ---------- input ----------
+const keys = {};
+window.addEventListener('keydown', e=>{
+  keys[e.key.toLowerCase()] = true;
+  if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(e.key.toLowerCase())) e.preventDefault();
+});
+window.addEventListener('keyup', e=> keys[e.key.toLowerCase()] = false);
+
+function bindTouch(id,key){
+  const el = $(id);
+  const on  = e=>{e.preventDefault(); keys[key]=true;};
+  const off = e=>{e.preventDefault(); keys[key]=false;};
+  el.addEventListener('touchstart',on); el.addEventListener('touchend',off); el.addEventListener('touchcancel',off);
+}
+bindTouch('tLeft','arrowleft'); bindTouch('tRight','arrowright');
+bindTouch('tJump','arrowup');   bindTouch('tAttack','x');
+
+// ---------- helpers ----------
+function overGap(x){ return gaps.some(g => x>g[0] && x<g[1]); }
+function showToast(msg){
+  const t = $('toast'); t.textContent = msg; t.style.opacity = 1;
+  clearTimeout(t._tm); t._tm = setTimeout(()=>t.style.opacity=0, 1800);
+}
+function updateHud(){
+  $('hearts').textContent = '❤️'.repeat(P.hp) + '🖤'.repeat(P.maxHp-P.hp);
+  $('coinBox').textContent = '🦆 ' + P.coins;
+  let zn = zones[0][1];
+  for(const z of zones) if(P.x >= z[0]) zn = z[1];
+  $('zoneName').textContent = zn;
+}
+
+// ---------- dialogue ----------
+function openDialogue(ev){
+  paused = true;
+  $('dTitle').textContent = ev.title;
+  $('dText').textContent = ev.text;
+  const box = $('dChoices'); box.innerHTML='';
+  ev.choices.forEach(c=>{
+    const b = document.createElement('button');
+    b.textContent = c.label;
+    b.onclick = ()=>{
+      c.effect(P);
+      showToast(c.toast);
+      $('dialogue').classList.add('hidden');
+      paused = false;
+      updateHud();
+    };
+    box.appendChild(b);
+  });
+  $('dialogue').classList.remove('hidden');
+}
+
+// ---------- update ----------
+function update(){
+  if(paused) return;
+
+  // movement
+  const L = keys['arrowleft']||keys['a'], R = keys['arrowright']||keys['d'];
+  if(L){ P.vx -= MOVE*P.speedBoost; P.face=-1; }
+  if(R){ P.vx += MOVE*P.speedBoost; P.face=1; }
+  if(!L&&!R) P.vx *= FRICTION;
+  const mx = MAXVX*P.speedBoost;
+  P.vx = Math.max(-mx, Math.min(mx, P.vx));
+
+  if((keys['arrowup']||keys['w']||keys[' ']) && P.onGround){
+    P.vy = JUMP*P.jumpBoost; P.onGround = false;
+  }
+
+  // attack
+  if((keys['x']||keys['j']) && P.attackT<=0) P.attackT = 22;
+  if(P.attackT>0) P.attackT--;
+  if(P.hurtT>0) P.hurtT--;
+
+  P.vy += GRAV;
+  P.x += P.vx;
+  P.y += P.vy;
+  P.x = Math.max(10, Math.min(WORLD_W-40, P.x));
+  if(Math.abs(P.vx)>.5 && P.onGround) P.walkT++;
+
+  // ground & platform collision
+  P.onGround = false;
+  const feet = P.y + P.h;
+  if(!overGap(P.x + P.w/2)){
+    if(feet >= GROUND_Y && P.vy >= 0 && feet - P.vy <= GROUND_Y + 14){
+      P.y = GROUND_Y - P.h; P.vy = 0; P.onGround = true;
+    }
+  }
+  for(const p of plats){
+    if(P.x+P.w > p[0] && P.x < p[0]+p[2]){
+      if(feet >= p[1] && feet - P.vy <= p[1]+12 && P.vy >= 0){
+        P.y = p[1]-P.h; P.vy = 0; P.onGround = true;
+      }
+    }
+  }
+
+  // fell in the river
+  if(P.y > 700){ hurt(1, true); }
+
+  // checkpoints at zone starts
+  for(const z of zones){
+    if(P.x >= z[0] && P.checkpoint.x < z[0]){
+      P.checkpoint = {x:z[0]+30, y:GROUND_Y-60};
+    }
+  }
+
+  // coins
+  for(const c of coins){
+    if(c.taken) continue;
+    c.t += .12;
+    if(Math.abs(P.x+P.w/2 - c.x) < 26 && Math.abs(P.y+P.h/2 - c.y) < 36){
+      c.taken = true; P.coins++; updateHud();
+    }
+  }
+
+  // mako the cat (lily only) — follows, and occasionally sniffs out bonus bucks
+  if(mako){
+    mako.t += .15;
+    const tx = P.x - 46*P.face;
+    mako.vx += (tx - mako.x)*0.045;
+    mako.vx *= .82;
+    mako.x += mako.vx;
+    let my = GROUND_Y-20;
+    if(!overGap(mako.x+10)) mako.y += (my - mako.y)*.2;
+    else mako.y = P.y+30;
+    mako.sniffT++;
+    if(mako.sniffT > 60*18){      // every ~18 seconds
+      mako.sniffT = 0;
+      P.coins += 2; updateHud();
+      showToast("Mako sniffed out 2 Duck Bucks! 🐈");
+    }
+  }
+
+  // enemies
+  for(const e of enemies){
+    if(e.dead) continue;
+    e.t += .1;
+    if(e.kind==='goose'){
+      e.x += e.dir*1.3;
+      if(e.x < e.range[0] || e.x > e.range[1]) e.dir*=-1;
+    }else if(e.kind==='cloud'){
+      e.y = e.baseY + Math.sin(e.t)*22;
+      e.x += Math.cos(e.t*.6)*.7;
+    }else if(e.kind==='ball'){
+      e.x += e.dir*2.1;
+      if(e.x < e.range[0] || e.x > e.range[1]) e.dir*=-1;
+      e.vy += GRAV;
+      e.y += e.vy;
+      if(e.y+e.h >= GROUND_Y){ e.y = GROUND_Y-e.h; e.vy = -9; }
+    }
+
+    // whip hit
+    if(P.attackT > 12){
+      const reach = 58;
+      const hx = P.face===1 ? P.x+P.w : P.x-reach;
+      if(e.x+e.w > hx && e.x < hx+reach && Math.abs((e.y+e.h/2)-(P.y+P.h/2)) < 55){
+        e.hp -= P.atkPower;
+        if(e.hp<=0){ e.dead = true; P.coins += 3; updateHud(); showToast("+3 🦆"); }
+        else { e.x += P.face*36; }
+        P.attackT = 12;
+      }
+    }
+    // touch damage
+    if(!e.dead && P.hurtT<=0 &&
+       P.x+P.w > e.x && P.x < e.x+e.w &&
+       P.y+P.h > e.y && P.y < e.y+e.h){
+      hurt(1,false);
+      P.vx = (P.x < e.x ? -7 : 7);
+      P.vy = -6;
+    }
+  }
+
+  // landmark events
+  for(const ev of events){
+    if(!ev.done && P.x >= ev.x){ ev.done = true; openDialogue(ev); }
+  }
+
+  // WIN — summit flag
+  if(P.x > 7380 && !won){
+    won = true; running = false;
+    const name = P.char==='meg' ? 'Meg' : 'Lily';
+    const buddy = P.char==='lily' ? ' With Mako purring on her shoulder, she' : ' She';
+    $('winText').textContent =
+      name + " climbed the last switchback of Spencer Butte and pried the Golden Duck from the bandit's stash. " +
+      buddy + " carried it home past Autzen, Hayward Field, the Saturday Market, and Skinner Butte as all of Eugene cheered. " +
+      "Final treasure: " + P.coins + " Duck Bucks! 🦆";
+    $('gameWrap').classList.add('hidden');
+    $('winScreen').classList.remove('hidden');
+  }
+
+  // camera
+  const viewW = W/SCALE;
+  cam.x = Math.max(0, Math.min(WORLD_W - viewW, P.x - viewW*0.42));
+}
+
+function hurt(n, fell){
+  P.hp -= n; P.hurtT = 70;
+  if(P.hp <= 0 || fell){
+    if(P.hp<=0){ P.hp = P.maxHp; showToast("Ouch! Back to the last landmark…"); }
+    else showToast("Splash! 🌊");
+    P.x = P.checkpoint.x; P.y = P.checkpoint.y; P.vx=0; P.vy=0;
+    if(mako){ mako.x = P.x-40; mako.y = GROUND_Y-20; }
+  }
+  updateHud();
+}
+
+// ---------- drawing ----------
+function loop(){
+  if(running){ update(); draw(); requestAnimationFrame(loop); }
+}
+
+function draw(){
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.clearRect(0,0,W,H);
+  ctx.setTransform(SCALE,0,0,SCALE, -cam.x*SCALE, 0);
+
+  const vx0 = cam.x, vx1 = cam.x + W/SCALE;
+
+  // sky
+  const sky = ctx.createLinearGradient(0,0,0,560);
+  sky.addColorStop(0,'#aee0f2'); sky.addColorStop(1,'#e8f6dc');
+  ctx.fillStyle = sky; ctx.fillRect(vx0,-200,vx1-vx0,900);
+
+  drawParallaxHills(vx0,vx1);
+  drawLandmarks(vx0,vx1);
+
+  // ground
+  for(let gx = Math.floor(vx0/40)*40; gx < vx1; gx+=40){
+    if(overGap(gx+20)) continue;
+    ctx.fillStyle = '#5ea35e';
+    ctx.fillRect(gx,GROUND_Y,40,12);
+    ctx.fillStyle = '#8a5a33';
+    ctx.fillRect(gx,GROUND_Y+12,40,120);
+  }
+  // river in gaps
+  for(const g of gaps){
+    if(g[1]<vx0||g[0]>vx1) continue;
+    ctx.fillStyle = '#3f7fb5';
+    ctx.fillRect(g[0],GROUND_Y+40,g[1]-g[0],100);
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    for(let i=0;i<4;i++){
+      const wx = g[0]+ (g[1]-g[0])*( (i*.27 + (performance.now()/2000)) %1 );
+      ctx.fillRect(wx, GROUND_Y+52+i*16, 22, 3);
+    }
+  }
+  // platforms
+  for(const p of plats){
+    if(p[0]+p[2]<vx0||p[0]>vx1) continue;
+    ctx.fillStyle = '#7a4f2b'; ctx.fillRect(p[0],p[1],p[2],14);
+    ctx.fillStyle = '#5ea35e'; ctx.fillRect(p[0],p[1],p[2],5);
+  }
+
+  // coins
+  for(const c of coins){
+    if(c.taken || c.x<vx0-40 || c.x>vx1+40) continue;
+    const bob = Math.sin(c.t)*4;
+    ctx.save(); ctx.translate(c.x, c.y+bob);
+    ctx.fillStyle = '#FEE123'; ctx.beginPath(); ctx.arc(0,0,11,0,7); ctx.fill();
+    ctx.strokeStyle = '#b8a200'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle = '#154733'; ctx.font='bold 11px Nunito'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('🦆',0,1);
+    ctx.restore();
+  }
+
+  // enemies
+  for(const e of enemies){ if(!e.dead && e.x>vx0-80 && e.x<vx1+80) drawEnemy(e); }
+
+  // summit flag
+  drawFlag(7400);
+
+  if(mako) drawMako();
+  drawPlayer();
+}
+
+function drawParallaxHills(vx0,vx1){
+  ctx.save();
+  ctx.translate(cam.x*0.5,0);   // slow layer
+  ctx.fillStyle = '#9cc4a0';
+  for(let i=-1;i<14;i++){
+    const hx = i*640 ;
+    ctx.beginPath(); ctx.arc(hx,520,260,Math.PI,0); ctx.fill();
+  }
+  ctx.restore();
+  ctx.save();
+  ctx.translate(cam.x*0.25,0);
+  ctx.fillStyle = '#b9d8b0';
+  for(let i=-1;i<10;i++){
+    const hx = i*900+300;
+    ctx.beginPath(); ctx.arc(hx,540,330,Math.PI,0); ctx.fill();
+  }
+  ctx.restore();
+  // firs scattered (parallax mid)
+  ctx.save();
+  ctx.translate(cam.x*0.15,0);
+  for(let i=0;i<26;i++){
+    const tx = i*430+90;
+    fir(tx, 470, 0.8+((i*37)%3)*0.25, '#2e6b46');
+  }
+  ctx.restore();
+}
+function fir(x,baseY,s,color){
+  ctx.fillStyle = color;
+  for(let l=0;l<3;l++){
+    const w = (54-l*13)*s, h=34*s, y = baseY-(l*26*s);
+    ctx.beginPath();
+    ctx.moveTo(x, y-h); ctx.lineTo(x-w/2,y); ctx.lineTo(x+w/2,y); ctx.fill();
+  }
+  ctx.fillStyle = '#5b3a1e';
+  ctx.fillRect(x-4*s,baseY,8*s,14*s);
+}
+
+function sign(x, label){
+  ctx.fillStyle = '#5b3a1e'; ctx.fillRect(x-4,GROUND_Y-66,8,66);
+  ctx.fillStyle = '#fdf6e3'; ctx.fillRect(x-66,GROUND_Y-96,132,36);
+  ctx.strokeStyle = '#154733'; ctx.lineWidth = 3; ctx.strokeRect(x-66,GROUND_Y-96,132,36);
+  ctx.fillStyle = '#154733'; ctx.font = 'bold 11px Nunito';
+  ctx.textAlign = 'center'; ctx.textBaseline='middle';
+  ctx.fillText(label, x, GROUND_Y-78, 124);
+}
+
+function drawLandmarks(vx0,vx1){
+  // Skinner Butte — green hill with flagpole, ~1500-2300
+  if(2400>vx0 && 1450<vx1){
+    ctx.fillStyle = '#4f8d5d';
+    ctx.beginPath(); ctx.moveTo(1500,GROUND_Y);
+    ctx.quadraticCurveTo(1950,140,2400,GROUND_Y); ctx.fill();
+    fir(1750,330,1,'#2e6b46'); fir(2100,320,1.1,'#2e6b46'); fir(1950,250,0.9,'#1f5236');
+    ctx.fillStyle='#888'; ctx.fillRect(1948,160,4,60);
+    ctx.fillStyle='#c0392b'; ctx.fillRect(1952,160,26,14);
+    sign(1520,"SKINNER BUTTE");
+  }
+  // Saturday Market — striped stalls ~2780-3500
+  if(3600>vx0 && 2700<vx1){
+    for(let i=0;i<3;i++){
+      const sx = 2820+i*240;
+      ctx.fillStyle = '#fdf6e3'; ctx.fillRect(sx,GROUND_Y-110,150,110);
+      ctx.fillStyle = i%2? '#c0392b':'#154733';
+      for(let s2=0;s2<5;s2++){ if(s2%2===0){ ctx.fillRect(sx+s2*30,GROUND_Y-140,30,34);} }
+      ctx.fillStyle = '#FEE123';
+      for(let s2=1;s2<5;s2+=2){ ctx.fillRect(sx+s2*30,GROUND_Y-140,30,34); }
+      ctx.fillStyle='#5b3a1e';
+      ctx.fillRect(sx+8,GROUND_Y-60,40,60); ctx.fillRect(sx+100,GROUND_Y-60,40,60);
+    }
+    sign(2760,"SATURDAY MARKET");
+  }
+  // Hayward Field — tower + track ~4080-4600
+  if(4750>vx0 && 4000<vx1){
+    ctx.fillStyle = '#b7410e';                     // track
+    ctx.fillRect(4080,GROUND_Y-8,520,8);
+    ctx.fillStyle = '#fff';
+    for(let i=0;i<9;i++) ctx.fillRect(4090+i*58,GROUND_Y-6,30,2);
+    // the iconic Hayward tower
+    ctx.fillStyle = '#d9cfc0';
+    ctx.beginPath(); ctx.moveTo(4360,GROUND_Y-8); ctx.lineTo(4385,GROUND_Y-235); ctx.lineTo(4430,GROUND_Y-235); ctx.lineTo(4455,GROUND_Y-8); ctx.fill();
+    ctx.fillStyle = '#154733'; ctx.fillRect(4385,GROUND_Y-235,45,16);
+    ctx.fillStyle = '#FEE123'; ctx.font='bold 12px Nunito'; ctx.textAlign='center';
+    ctx.fillText('O', 4407, GROUND_Y-222);
+    // grandstand canopy
+    ctx.fillStyle = '#9aa7ad';
+    ctx.beginPath(); ctx.moveTo(4460,GROUND_Y-8); ctx.quadraticCurveTo(4560,GROUND_Y-150,4660,GROUND_Y-8); ctx.fill();
+    sign(4040,"HAYWARD FIELD");
+  }
+  // Autzen Stadium ~5430-6000
+  if(6100>vx0 && 5350<vx1){
+    ctx.fillStyle = '#154733';
+    ctx.beginPath(); ctx.moveTo(5480,GROUND_Y); ctx.quadraticCurveTo(5740,GROUND_Y-260,6000,GROUND_Y); ctx.fill();
+    ctx.fillStyle = '#FEE123'; ctx.font="bold 26px 'Rye'"; ctx.textAlign='center';
+    ctx.fillText('AUTZEN', 5740, GROUND_Y-90);
+    ctx.fillStyle = '#9aa7ad';
+    ctx.fillRect(5560,GROUND_Y-170,10,60); ctx.fillRect(5910,GROUND_Y-170,10,60); // light poles
+    ctx.fillStyle = '#e8e8e8';
+    ctx.fillRect(5544,GROUND_Y-186,42,16); ctx.fillRect(5894,GROUND_Y-186,42,16);
+    sign(5390,"AUTZEN STADIUM");
+  }
+  // Spencer Butte — big summit at the end
+  if(7600>vx0 && 6500<vx1){
+    ctx.fillStyle = '#3f7a52';
+    ctx.beginPath(); ctx.moveTo(6560,GROUND_Y);
+    ctx.quadraticCurveTo(7100,60,7600,GROUND_Y); ctx.fill();
+    ctx.fillStyle = '#6e6e6e';                      // rocky cap
+    ctx.beginPath(); ctx.moveTo(7020,250); ctx.quadraticCurveTo(7100,120,7220,240); ctx.fill();
+    fir(6750,360,1.2,'#1f5236'); fir(6900,300,1,'#2e6b46'); fir(7300,300,1.1,'#1f5236');
+    sign(6540,"SPENCER BUTTE");
+  }
+}
+
+function drawFlag(x){
+  ctx.fillStyle='#888'; ctx.fillRect(x,GROUND_Y-130,5,130);
+  ctx.fillStyle='#FEE123';
+  ctx.beginPath(); ctx.moveTo(x+5,GROUND_Y-130); ctx.lineTo(x+70,GROUND_Y-112); ctx.lineTo(x+5,GROUND_Y-94); ctx.fill();
+  ctx.fillStyle='#154733'; ctx.font='bold 13px Nunito'; ctx.textAlign='left';
+  ctx.fillText('🏆', x+16, GROUND_Y-106);
+}
+
+function drawEnemy(e){
+  ctx.save(); ctx.translate(e.x+e.w/2, e.y+e.h/2);
+  if(e.kind==='goose'){
+    ctx.scale(e.dir,1);
+    ctx.fillStyle='#777';                                  // body
+    ctx.beginPath(); ctx.ellipse(0,4,16,11,0,0,7); ctx.fill();
+    ctx.fillStyle='#222';                                  // neck/head (canada goose!)
+    ctx.fillRect(8,-14,6,16);
+    ctx.beginPath(); ctx.arc(11,-15,6,0,7); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.fillRect(8,-13,7,4);         // chinstrap
+    ctx.fillStyle='#e89b3c'; ctx.fillRect(15,-17,8,4);     // beak
+    ctx.fillStyle='#e89b3c';
+    ctx.fillRect(-4,14,3,6); ctx.fillRect(4,14,3,6);
+  }else if(e.kind==='cloud'){
+    ctx.fillStyle='#6c7a89';
+    ctx.beginPath();
+    ctx.arc(-12,0,12,0,7); ctx.arc(2,-6,14,0,7); ctx.arc(14,2,11,0,7);
+    ctx.fill();
+    ctx.fillStyle='#3f7fb5';
+    const d = (e.t*30)%18;
+    ctx.fillRect(-8, 12+d*0.6, 3,7); ctx.fillRect(6, 10+((d+9)%18)*0.6, 3,7);
+    ctx.fillStyle='#fff'; ctx.fillRect(-9,-4,4,4); ctx.fillRect(5,-7,4,4); // angry eyes
+  }else{
+    ctx.rotate(e.t*2*e.dir);
+    ctx.fillStyle='#7a4f2b';
+    ctx.beginPath(); ctx.ellipse(0,0,15,10,0,0,7); ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(-7,0); ctx.lineTo(7,0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-4,-3); ctx.lineTo(-4,3); ctx.moveTo(0,-4); ctx.lineTo(0,4); ctx.moveTo(4,-3); ctx.lineTo(4,3); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawMako(){
+  ctx.save(); ctx.translate(mako.x, mako.y);
+  const hop = Math.abs(Math.sin(mako.t*2))* (Math.abs(mako.vx)>0.5?5:0);
+  ctx.translate(0,-hop);
+  ctx.fillStyle='#3b3b3b';
+  ctx.beginPath(); ctx.ellipse(0,0,13,8,0,0,7); ctx.fill();      // body
+  ctx.beginPath(); ctx.arc(11,-6,7,0,7); ctx.fill();             // head
+  ctx.beginPath(); ctx.moveTo(7,-11); ctx.lineTo(9,-17); ctx.lineTo(11,-11); ctx.fill();  // ears
+  ctx.beginPath(); ctx.moveTo(12,-11); ctx.lineTo(14,-17); ctx.lineTo(16,-11); ctx.fill();
+  ctx.strokeStyle='#3b3b3b'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(-12,-2); ctx.quadraticCurveTo(-20,-14,-14,-18); ctx.stroke(); // tail
+  ctx.fillStyle='#9fe070'; ctx.fillRect(12,-8,2,2); ctx.fillRect(16,-8,2,2);                // eyes
+  ctx.restore();
+}
+
+function drawPlayer(){
+  const flash = P.hurtT>0 && Math.floor(P.hurtT/5)%2===0;
+  if(flash) return;
+  ctx.save();
+  ctx.translate(P.x+P.w/2, P.y);
+  ctx.scale(P.face,1);
+  const step = P.onGround && Math.abs(P.vx)>.5 ? Math.sin(P.walkT*.4)*5 : 0;
+  const isMeg = P.char==='meg';
+
+  // legs — Meg gets her green & yellow striped overalls!
+  if(isMeg){
+    ctx.fillStyle='#FEE123'; ctx.fillRect(-11,34,9,22+step*.4);
+    ctx.fillStyle='#154733'; ctx.fillRect(2,34,9,22-step*.4);
+  }else{
+    ctx.fillStyle='#3a5fa3'; // jeans
+    ctx.fillRect(-11,34,9,22+step*.4); ctx.fillRect(2,34,9,22-step*.4);
+  }
+  // torso
+  ctx.fillStyle = isMeg ? '#6b6b45' : '#4a2c33';       // olive tee / brown tank
+  ctx.fillRect(-13,12,26,24);
+  if(isMeg){                                            // overall straps
+    ctx.fillStyle='#FEE123'; ctx.fillRect(-11,12,5,22);
+    ctx.fillStyle='#154733'; ctx.fillRect(6,12,5,22);
+  }
+  // arms + whip
+  ctx.fillStyle = '#e8c5a8';
+  if(P.attackT>0){
+    ctx.fillRect(10,16,18,6);                           // extended arm
+    const ext = (22-P.attackT)/22;
+    ctx.strokeStyle = isMeg ? '#154733' : '#b7410e';
+    ctx.lineWidth=3; ctx.beginPath();
+    ctx.moveTo(28,19);
+    ctx.quadraticCurveTo(28+30*ext, 8, 28+52*ext, 16+Math.sin(P.attackT)*8);
+    ctx.stroke();
+  }else{
+    ctx.fillRect(-17,16,6,16); ctx.fillRect(11,16,6,16);
+  }
+  // head
+  ctx.fillStyle='#e8c5a8';
+  ctx.beginPath(); ctx.arc(0,2,11,0,7); ctx.fill();
+  // hair
+  if(isMeg){
+    ctx.fillStyle='#5b3a26';                            // long curly brown
+    ctx.beginPath(); ctx.arc(0,-3,12,Math.PI*0.9,Math.PI*2.1); ctx.fill();
+    for(let i=0;i<4;i++){
+      ctx.beginPath(); ctx.arc(-11,3+i*7,5,0,7); ctx.fill();
+      ctx.beginPath(); ctx.arc(-8,7+i*7,4,0,7); ctx.fill();
+    }
+  }else{
+    ctx.fillStyle='#d9b87a';                            // blonde
+    ctx.beginPath(); ctx.arc(0,-3,12,Math.PI*0.9,Math.PI*2.1); ctx.fill();
+    ctx.fillRect(-12,-3,6,22); ctx.fillRect(7,-3,6,18);
+  }
+  // face
+  ctx.fillStyle='#1d2a23';
+  ctx.fillRect(3,-1,3,3);
+  ctx.fillStyle='#c77'; ctx.fillRect(2,6,6,2);
+  ctx.restore();
+}
+
+</script>
+</body>
+</html>

@@ -1,94 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meghan Donovan - About Me</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lily &amp; Meg's Adventure — A Eugene, Oregon Web Game</title>
+<meta name="description" content="A free browser RPG platformer set in Eugene, Oregon. Run, jump, and whip your way past Skinner Butte, the Saturday Market, Hayward Field, and Autzen Stadium to recover the Golden Duck!">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --uo-green:#154733;
+    --green-light:#1f6647;
+    --uo-yellow:#FEE123;
+    --yellow-deep:#b8a200;
+    --cream:#fdf6e3;
+    --paper:#f3e8c9;
+    --ink:#1d2a23;
+    --rust:#b7410e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background:var(--uo-green);
+    color:var(--cream);
+    line-height:1.6;
+  }
+  .rye{font-family:'Rye',serif;}
+
+  /* ============ HERO ============ */
+  header{
+    min-height:100svh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:40px 20px;
+    background:
+      radial-gradient(circle at 50% 120%, var(--green-light) 0%, var(--uo-green) 55%);
+    position:relative;
+    overflow:hidden;
+  }
+  /* pixel ground strip along hero bottom */
+  header::after{
+    content:'';
+    position:absolute;left:0;right:0;bottom:0;height:26px;
+    background:
+      repeating-linear-gradient(90deg, #5ea35e 0 40px, #4f8d52 40px 80px);
+    image-rendering:pixelated;
+  }
+  .banner{
+    letter-spacing:.3em;
+    color:var(--uo-yellow);
+    border-top:2px solid var(--uo-yellow);
+    border-bottom:2px solid var(--uo-yellow);
+    padding:8px 20px;
+    font-size:clamp(.65rem,2vw,.9rem);
+    margin-bottom:22px;
+  }
+  h1{
+    font-family:'Rye',serif;
+    font-size:clamp(2.4rem,9vw,5.5rem);
+    color:var(--uo-yellow);
+    text-shadow:5px 5px 0 #0c2b1e;
+    line-height:1.05;
+  }
+  .tagline{
+    max-width:620px;
+    margin:22px auto 30px;
+    font-size:clamp(1rem,2.6vw,1.2rem);
+    color:#dff0e4;
+  }
+  .play-btn{
+    display:inline-block;
+    font-family:'Rye',serif;
+    font-size:clamp(1.2rem,3.5vw,1.7rem);
+    background:var(--uo-yellow);
+    color:var(--uo-green);
+    text-decoration:none;
+    border-radius:12px;
+    padding:18px 52px;
+    box-shadow:0 7px 0 var(--yellow-deep);
+    transition:transform .1s;
+  }
+  .play-btn:active{transform:translateY(5px);box-shadow:0 2px 0 var(--yellow-deep);}
+  .free{margin-top:14px;font-size:.8rem;color:#9cc4a8;}
+
+  /* ============ SECTIONS ============ */
+  section{padding:72px 20px;}
+  .inner{max-width:980px;margin:0 auto;}
+  h2{
+    font-family:'Rye',serif;
+    color:var(--uo-yellow);
+    font-size:clamp(1.5rem,5vw,2.4rem);
+    text-align:center;
+    margin-bottom:14px;
+  }
+  .section-sub{text-align:center;max-width:560px;margin:0 auto 44px;color:#bcd9c6;font-size:.95rem;}
+
+  /* story */
+  #story{background:var(--green-light);}
+  .story-card{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:4px;
+    max-width:660px;margin:0 auto;
+    padding:36px 32px;
+    box-shadow:0 14px 40px rgba(0,0,0,.35);
+    border:1px solid #d8c89b;
+    position:relative;
+    transform:rotate(-.6deg);
+  }
+  .story-card::before{
+    content:'★ BULLETIN ★';
+    display:block;text-align:center;
+    font-family:'Rye',serif;letter-spacing:.3em;
+    color:var(--rust);font-size:.8rem;margin-bottom:14px;
+  }
+  .story-card p{margin-bottom:14px;font-size:1rem;}
+  .story-card p:last-child{margin-bottom:0;font-weight:900;color:var(--uo-green);}
+
+  /* characters */
+  .char-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;max-width:680px;margin:0 auto;}
+  .char{
+    background:var(--cream);color:var(--ink);
+    border-radius:16px;overflow:hidden;
+    box-shadow:0 12px 30px rgba(0,0,0,.3);
+  }
+  .char img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;display:block;}
+  .char .body{padding:20px;}
+  .char h3{font-family:'Rye',serif;color:var(--uo-green);font-size:1.4rem;}
+  .char .role{color:var(--rust);font-weight:900;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;}
+  .char p{font-size:.9rem;}
+  .char .perk{
+    margin-top:12px;background:var(--uo-green);color:var(--uo-yellow);
+    border-radius:8px;padding:8px 12px;font-size:.8rem;font-weight:700;
+  }
+
+  /* trail */
+  #trail{background:var(--green-light);}
+  .trail-list{max-width:640px;margin:0 auto;list-style:none;}
+  .trail-list li{
+    display:flex;gap:18px;align-items:flex-start;
+    padding:18px 0;
+    border-bottom:1px dashed rgba(254,225,35,.35);
+  }
+  .trail-list li:last-child{border-bottom:none;}
+  .marker{
+    flex:none;width:46px;height:46px;border-radius:50%;
+    background:var(--uo-yellow);color:var(--uo-green);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.3rem;
+    box-shadow:0 4px 0 var(--yellow-deep);
+  }
+  .trail-list h3{font-family:'Rye',serif;color:var(--uo-yellow);font-size:1.05rem;}
+  .trail-list p{font-size:.88rem;color:#dff0e4;}
+
+  /* wanted posters */
+  .wanted-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;max-width:760px;margin:0 auto;}
+  .poster{
+    background:var(--paper);color:var(--ink);
+    padding:18px 16px 22px;
+    text-align:center;
+    border:1px solid #d8c89b;
+    box-shadow:0 10px 24px rgba(0,0,0,.3);
+  }
+  .poster:nth-child(1){transform:rotate(-1.5deg);}
+  .poster:nth-child(2){transform:rotate(1deg);}
+  .poster:nth-child(3){transform:rotate(-.7deg);}
+  .poster .w{font-family:'Rye',serif;letter-spacing:.25em;color:var(--rust);font-size:.85rem;}
+  .poster .pic{font-size:3rem;margin:10px 0;}
+  .poster h3{font-family:'Rye',serif;color:var(--uo-green);font-size:1.05rem;}
+  .poster p{font-size:.78rem;margin-top:6px;}
+  .poster .bounty{margin-top:10px;font-weight:900;color:var(--uo-green);font-size:.8rem;}
+
+  /* how to play */
+  .controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;max-width:760px;margin:0 auto;}
+  .ctrl{
+    background:rgba(253,246,227,.07);
+    border:1px solid rgba(254,225,35,.3);
+    border-radius:12px;padding:20px;text-align:center;
+  }
+  .ctrl .keys{margin-bottom:10px;}
+  kbd{
+    display:inline-block;
+    background:#0c2b1e;border-radius:6px;padding:3px 10px;
+    font-family:'Nunito';font-weight:900;color:var(--uo-yellow);
+    border:1px solid #2d6b4d;margin:2px;
+    font-size:.85rem;
+  }
+  .ctrl p{font-size:.85rem;color:#dff0e4;}
+
+  /* final CTA + footer */
+  #go{text-align:center;background:var(--green-light);}
+  footer{
+    text-align:center;padding:28px 16px;font-size:.75rem;color:#7fae92;
+  }
+  footer a{color:var(--uo-yellow);}
+</style>
 </head>
 <body>
 
-    <header>
-        <img src="me.jpg" alt="Meghan Donovan" class="profile-image">
-        <h1>Meghan Donovan</h1>
-        <hr>
-        <p>
-            <a href="mailto:malmdon@uorgeon.edu" title="Email Meghan Donovan">mdon@uorgeon.edu</a> |
-            <a href="tel:6176101119" title="Call Meghan Donovan">(617) 610-1119</a> |
-            <a href="https://www.linkedin.com/in/meghan-donovan-495857290" title="Meghan Donovan's LinkedIn Profile">linkedin.com/in/meghan-donovan-495857290</a>
-        </p>
-    </header>
+<header>
+  <div class="banner">★ A FREE BROWSER GAME SET IN EUGENE, OREGON ★</div>
+  <h1>Lily &amp; Meg's<br>Adventure</h1>
+  <p class="tagline">The Golden Duck Statue has been stolen from Hayward Field — and only two heroes (and one very good cat) can get it back. Run, jump, and whip your way across Eugene's most famous landmarks.</p>
+  <a class="play-btn" href="play.html">▶ Play Now</a>
+  <p class="free">Free to play • Works on computer &amp; phone • No download needed</p>
+</header>
 
-    <main>
+<section id="story">
+  <div class="inner">
+    <h2>The Story</h2>
+    <p class="section-sub">Inspired by classic run-and-whip platformers like Cactus McCoy.</p>
+    <div class="story-card">
+      <p>At dawn, the people of Eugene woke to terrible news: the legendary <b>Golden Duck Statue</b> had vanished from Hayward Field. Witnesses reported a shadowy bandit fleeing south toward the mist-covered summit of <b>Spencer Butte</b>.</p>
+      <p>The trail runs along the Willamette River, over Skinner Butte, through the Saturday Market crowds, past the roaring stands of Autzen Stadium, and up the steep forest switchbacks of the butte itself.</p>
+      <p>The city needs a hero. Will it be Meg... or Lily &amp; Mako?</p>
+    </div>
+  </div>
+</section>
 
-        <section>
-            <h2>Personal Information</h2>
-            <p>
-                Hello Im Meghan Donovan, a passionate and dedicated student at the University of Oregon. I am currently taking CS110, an introduction to programming course, where I am learning the fundamentals of coding and problem-solving. I have a strong interest in technology and am eager to develop my skills in software development and computer science. In my free time, I enjoy exploring new programming languages, working on personal projects, and staying up-to-date with the latest trends in the tech industry.
-            </p>
-        </section>
+<section id="heroes">
+  <div class="inner">
+    <h2>Choose Your Hero</h2>
+    <p class="section-sub">Two playable characters, each with their own strengths.</p>
+    <div class="char-grid">
+      <div class="char">
+        <img src="Meg.jpg" alt="Meg, one of the two playable heroes">
+        <div class="body">
+          <p class="role">The Powerhouse</p>
+          <h3>Meg</h3>
+          <p>Tough as old-growth timber and twice as stubborn. Meg has trekked every trail in Lane County and isn't about to let some bandit ruin track season.</p>
+          <div class="perk">⚡ Perk: stronger whip attacks + starts with an extra heart</div>
+        </div>
+      </div>
+      <div class="char">
+        <img src="lily.png" alt="Lily, one of the two playable heroes">
+        <div class="body">
+          <p class="role">The Scout</p>
+          <h3>Lily &amp; Mako</h3>
+          <p>Quick on her feet with a sixth sense for treasure — mostly because her cat Mako does the sniffing. Where Lily goes, Mako follows.</p>
+          <div class="perk">🐈 Perk: Mako tags along and digs up bonus Duck Bucks</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <section>
-            <h2>Education</h2>
-            <p> Environmental Design| University of Oregon | 2023 - Present</p>
-            <p> My academic focus centers on land-based design across urban and rural contexts I also have a love for computer science, but with my major my studies emphasise  on sustainable, regenerative, and ecologically driven strategies.</p>
-        </section>
+<section id="trail">
+  <div class="inner">
+    <h2>The Trail Across Eugene</h2>
+    <p class="section-sub">Six real Eugene landmarks, one continuous side-scrolling world.</p>
+    <ol class="trail-list">
+      <li><div class="marker">🌊</div><div><h3>Willamette Riverfront</h3><p>The journey begins along the river. Watch your step — those gaps are colder than they look.</p></div></li>
+      <li><div class="marker">⛰️</div><div><h3>Skinner Butte</h3><p>The hill that watches over downtown. A friendly hiker offers your first choice of the journey.</p></div></li>
+      <li><div class="marker">🎪</div><div><h3>Eugene Saturday Market</h3><p>Music, stalls, and fresh bread. Trade with a vendor — soup or a lucky tie-dye bandana?</p></div></li>
+      <li><div class="marker">🏟️</div><div><h3>Hayward Field</h3><p>The scene of the crime. A coach offers training: sprint speed or high-jump hops.</p></div></li>
+      <li><div class="marker">🦆</div><div><h3>Autzen Stadium</h3><p>It never rains at Autzen Stadium... but the rain clouds out here didn't get the memo.</p></div></li>
+      <li><div class="marker">🏆</div><div><h3>Spencer Butte Summit</h3><p>The final climb through the firs. The Golden Duck glints at the top. One last push!</p></div></li>
+    </ol>
+  </div>
+</section>
 
-        <section>
-            <h2>Skills</h2>
+<section id="wanted">
+  <div class="inner">
+    <h2>Wanted: Trail Troublemakers</h2>
+    <p class="section-sub">Defeat them with your whip to earn Duck Buck bounties.</p>
+    <div class="wanted-grid">
+      <div class="poster">
+        <p class="w">WANTED</p>
+        <div class="pic">🪿</div>
+        <h3>Rogue Goose</h3>
+        <p>Patrols the riverbank. Honks first, asks questions never. Every Eugene local knows the danger.</p>
+        <p class="bounty">BOUNTY: 3 🦆</p>
+      </div>
+      <div class="poster">
+        <p class="w">WANTED</p>
+        <div class="pic">🌧️</div>
+        <h3>Angry Rain Cloud</h3>
+        <p>A genuine Oregon menace. Hovers, drips, and ruins picnics. Jump and strike when it swoops low.</p>
+        <p class="bounty">BOUNTY: 3 🦆</p>
+      </div>
+      <div class="poster">
+        <p class="w">WANTED</p>
+        <div class="pic">🏈</div>
+        <h3>Runaway Football</h3>
+        <p>Escaped from Autzen during a kickoff in '94. Still bouncing. Fast, springy, and surprisingly rude.</p>
+        <p class="bounty">BOUNTY: 3 🦆</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-            <section>
-                <h3>Technical Skills</h3>
-                <ul>
-                    <li><span>HTML5</span></li>
-                    <li><span>Rhino 8</span></li>
-                    <li><span>Grasshopper</span></li>
-                    <li><span>CSS3</span></li>
-                    <li><span>JavaScript</span></li>
-                    <li><span>Python</span></li>
-                    <li><span>Adobe Creative Cloud (Illustrator, InDesign, Photoshop)</span></li>
-                    <li><span>GitHub</span></li>
-                </ul>
-            </section>
+<section id="how">
+  <div class="inner">
+    <h2>How to Play</h2>
+    <p class="section-sub">Playing on a phone? Touch buttons appear automatically.</p>
+    <div class="controls">
+      <div class="ctrl">
+        <div class="keys"><kbd>←</kbd><kbd>→</kbd> or <kbd>A</kbd><kbd>D</kbd></div>
+        <p>Run left and right along the trail</p>
+      </div>
+      <div class="ctrl">
+        <div class="keys"><kbd>↑</kbd> <kbd>W</kbd> or <kbd>Space</kbd></div>
+        <p>Jump over rivers and onto platforms</p>
+      </div>
+      <div class="ctrl">
+        <div class="keys"><kbd>X</kbd> or <kbd>J</kbd></div>
+        <p>Whip attack to defeat troublemakers</p>
+      </div>
+      <div class="ctrl">
+        <div class="keys">🦆</div>
+        <p>Collect Duck Bucks and make choices at each landmark to power up</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-            <section>
-                <h3>Soft Skills</h3>
-                <ul>
-                    <li><span>Problem Solving</span></li>
-                    <li><span>Communication</span></li>
-                    <li><span>Team Collaboration</span></li>
-                    <li><span>Time Management</span></li>
-                    <li><span>Leadership</span></li>
-                    <li><span> Creativity</span></li>
-                    <li><span>Adaptability</span></li>
-                </ul>
-            </section>
+<section id="go">
+  <div class="inner">
+    <h2>Eugene Needs You</h2>
+    <p class="section-sub">The Golden Duck isn't going to rescue itself.</p>
+    <a class="play-btn" href="play.html">▶ Start the Adventure</a>
+  </div>
+</section>
 
-        </section>
-
-        <section>
-            <h2>Featured Projects for CS110</h2>
-            <ol>
-                <li>
-                    <h3><a href="project2.html" title="Project 2">Creating a Scene with Turtle</a></h3>
-                    <p>This project involved creating a simple scene using the Turtle graphics library in Python. I learned the basics of programming and graphical design in Python. This was my second time ever working with Python and i learned a lot from adding more to my scene!</p>
-                </li>
-                <li>
-                   <h3><a href="https://colab.research.google.com/drive/1Qa2sXBPphMwldRmX6oVkUtXbWi_J79SK#scrollTo=3DAkxdYVf9gB" title="Project Four">Introduction to Google Colab</a></h3>
-                    <p>This project introduced me to Google Colab. Where I did get practice writing down docstrings and got better at understanding how text preprocessing with spaCy affects word frequency analysis via using Pride and Prejudice.</p>
-                </li>
-                <li>
-                    <h3><a href="https://colab.research.google.com/drive/1MBzxNyKmxS3AhQog4dMDw9254QcBeN-g" title="Project Seven">Vectorized Code</a></h3>
-                    <p>This project focused on implementing vectorized operations in Python using NumPy. I learned how to optimize code performance by leveraging vectorized functions instead of traditional loops I also answered 8 questions using the skills I gained with vectorization.</p>
-                </li>
-            </ol>
-        </section>
-
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Meghan Donovan</p>
-    </footer>
+<footer>
+  Made with 💛💚 in Eugene, Oregon • Inspired by Cactus McCoy •
+  <a href="https://frogmong55.github.io">Back to my site</a>
+</footer>
 
 </body>
 </html>
