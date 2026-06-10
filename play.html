@@ -3,231 +3,257 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Lily and Meg's Adventure — A Eugene, Oregon RPG</title>
+<title>Lily and Meg's Adventure — The Hunt for Mako</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rye&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --uo-green:#154733;
-    --uo-yellow:#FEE123;
-    --sky:#bfe3f0;
-    --dirt:#8a5a33;
-    --cream:#fdf6e3;
-    --ink:#1d2a23;
-    --danger:#c0392b;
+    --wood:#3a2417;
+    --wood-light:#54341f;
+    --paper:#f3e8c9;
+    --paper-dark:#e3d3a8;
+    --rust:#b7410e;
+    --gold:#FEE123;
+    --gold-deep:#b8a200;
+    --ink:#2b1a10;
+    --sand:#d9a85c;
+    --green:#154733;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   html,body{height:100%;}
   body{
     font-family:'Nunito',sans-serif;
-    background:var(--uo-green);
-    color:var(--cream);
+    background:var(--wood);
+    color:var(--paper);
     overflow:hidden;
     user-select:none;
   }
+  .rye{font-family:'Rye',serif;}
   .screen{
     position:fixed;inset:0;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     gap:18px;padding:20px;text-align:center;
     background:
-      radial-gradient(circle at 50% 110%, #1f6647 0%, var(--uo-green) 60%);
+      radial-gradient(circle at 50% 115%, var(--wood-light) 0%, var(--wood) 60%);
     z-index:10;
   }
   .hidden{display:none !important;}
   h1.title{
     font-family:'Rye',serif;
     font-size:clamp(2rem,7vw,4.2rem);
-    color:var(--uo-yellow);
-    text-shadow:4px 4px 0 #0c2b1e;
+    color:var(--gold);
+    text-shadow:4px 4px 0 #1c0f07;
     line-height:1.1;
   }
-  .subtitle{
-    font-size:clamp(.95rem,2.5vw,1.2rem);
-    max-width:560px;
-    color:#dff0e4;
-  }
+  .subtitle{font-size:clamp(.95rem,2.5vw,1.15rem);max-width:560px;color:#ecd9b0;}
   .wanted-banner{
-    font-family:'Rye',serif;
-    letter-spacing:.25em;
-    color:var(--uo-yellow);
-    border-top:2px solid var(--uo-yellow);
-    border-bottom:2px solid var(--uo-yellow);
-    padding:6px 16px;
-    font-size:clamp(.7rem,2vw,.95rem);
+    font-family:'Rye',serif;letter-spacing:.25em;color:var(--gold);
+    border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);
+    padding:6px 16px;font-size:clamp(.65rem,2vw,.9rem);
   }
   button.btn{
     font-family:'Rye',serif;
     font-size:clamp(1rem,3vw,1.3rem);
-    background:var(--uo-yellow);
-    color:var(--uo-green);
-    border:none;border-radius:10px;
-    padding:14px 34px;
-    cursor:pointer;
-    box-shadow:0 5px 0 #b8a200;
+    background:var(--gold);color:var(--wood);
+    border:none;border-radius:10px;padding:14px 34px;cursor:pointer;
+    box-shadow:0 5px 0 var(--gold-deep);
     transition:transform .08s;
   }
-  button.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #b8a200;}
+  button.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--gold-deep);}
   .char-row{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;}
   .char-card{
-    background:var(--cream);
-    color:var(--ink);
-    border-radius:16px;
-    padding:14px;
-    width:min(230px,42vw);
-    cursor:pointer;
+    background:var(--paper);color:var(--ink);
+    padding:14px;width:min(230px,42vw);cursor:pointer;
     border:5px solid transparent;
+    box-shadow:0 10px 26px rgba(0,0,0,.45);
     transition:transform .12s,border-color .12s;
   }
   .char-card:hover{transform:translateY(-6px) rotate(-1deg);}
-  .char-card.selected{border-color:var(--uo-yellow);transform:translateY(-6px);}
-  .char-card img{
-    width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;
-    border-radius:10px;
-  }
-  .char-card h3{font-family:'Rye',serif;margin-top:10px;font-size:1.3rem;color:var(--uo-green);}
+  .char-card.selected{border-color:var(--gold);transform:translateY(-6px);}
+  .char-card img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;}
+  .char-card h3{font-family:'Rye',serif;margin-top:10px;font-size:1.3rem;color:var(--rust);}
   .char-card p{font-size:.8rem;line-height:1.4;margin-top:4px;}
-  .controls-hint{font-size:.8rem;color:#bcd9c6;max-width:520px;line-height:1.6;}
+  .controls-hint{font-size:.8rem;color:#cdb88a;max-width:520px;line-height:1.6;}
   kbd{
-    background:#0c2b1e;border-radius:5px;padding:1px 7px;
-    font-family:'Nunito';font-weight:700;color:var(--uo-yellow);
-    border:1px solid #2d6b4d;
+    background:#1c0f07;border-radius:5px;padding:1px 7px;
+    font-family:'Nunito';font-weight:700;color:var(--gold);
+    border:1px solid #6b4a2e;
   }
 
-  /* ---- game layer ---- */
-  #gameWrap{position:fixed;inset:0;background:var(--sky);}
-  canvas{display:block;width:100%;height:100%;image-rendering:pixelated;}
+  /* ===== LANDING ===== */
+  #landing{
+    position:fixed;inset:0;overflow-y:auto;z-index:20;
+    background:
+      radial-gradient(circle at 50% 0%, var(--wood-light) 0%, var(--wood) 65%);
+  }
+  .land-hero{min-height:88svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;}
+  .land-sec{padding:54px 20px;max-width:880px;margin:0 auto;}
+  .land-sec h2{font-family:'Rye',serif;color:var(--gold);font-size:clamp(1.4rem,4.5vw,2.1rem);text-align:center;margin-bottom:8px;}
+  .land-sub{text-align:center;color:#cdb88a;font-size:.9rem;margin-bottom:34px;}
+  .story-card{
+    background:var(--paper);color:var(--ink);max-width:620px;margin:0 auto;
+    padding:30px 28px;box-shadow:0 14px 40px rgba(0,0,0,.45);transform:rotate(-.6deg);
+    border:1px solid var(--paper-dark);
+  }
+  .story-card::before{content:'\2605 BULLETIN \2605';display:block;text-align:center;font-family:'Rye',serif;letter-spacing:.3em;color:var(--rust);font-size:.75rem;margin-bottom:12px;}
+  .story-card p{margin-bottom:12px;font-size:.95rem;line-height:1.6;}
+  .story-card p:last-child{margin-bottom:0;font-weight:900;color:var(--rust);}
+
+  /* the big Mako wanted poster */
+  .mako-poster{
+    background:var(--paper);color:var(--ink);
+    max-width:340px;margin:0 auto;
+    padding:26px 24px 30px;text-align:center;
+    box-shadow:0 18px 50px rgba(0,0,0,.5);
+    transform:rotate(1deg);
+    border:10px solid var(--paper-dark);
+    outline:2px solid #c9b384;
+  }
+  .mako-poster .w{font-family:'Rye',serif;font-size:1.8rem;letter-spacing:.2em;color:var(--ink);}
+  .mako-poster .sub-w{font-family:'Rye',serif;font-size:.75rem;letter-spacing:.3em;color:var(--rust);margin-bottom:14px;}
+  .mako-poster .mug{
+    margin:0 auto 14px;width:170px;height:150px;
+    background:#efe2bd;border:3px solid var(--ink);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .mako-poster h3{font-family:'Rye',serif;font-size:1.5rem;color:var(--ink);}
+  .mako-poster .alias{font-style:italic;font-size:.8rem;margin:4px 0 10px;}
+  .mako-poster .crimes{font-size:.78rem;line-height:1.6;text-align:left;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:10px 4px;}
+  .mako-poster .reward{font-family:'Rye',serif;margin-top:12px;font-size:1.05rem;color:var(--rust);}
+
+  .land-chars{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px;max-width:620px;margin:0 auto;}
+  .land-char{background:var(--paper);color:var(--ink);overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.4);}
+  .land-char img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;display:block;}
+  .land-char .cbody{padding:18px;}
+  .land-char .role{color:var(--rust);font-weight:900;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;}
+  .land-char h3{font-family:'Rye',serif;color:var(--ink);font-size:1.25rem;margin:2px 0 8px;}
+  .land-char p{font-size:.85rem;line-height:1.5;}
+  .land-char .perk{margin-top:10px;background:var(--wood);color:var(--gold);padding:7px 11px;font-size:.75rem;font-weight:700;}
+  .trail-list{max-width:580px;margin:0 auto;list-style:none;}
+  .trail-list li{display:flex;gap:16px;align-items:flex-start;padding:15px 0;border-bottom:1px dashed rgba(254,225,35,.3);}
+  .trail-list li:last-child{border-bottom:none;}
+  .marker{flex:none;width:42px;height:42px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.15rem;box-shadow:0 4px 0 var(--gold-deep);}
+  .trail-list h3{font-family:'Rye',serif;color:var(--gold);font-size:1rem;}
+  .trail-list p{font-size:.83rem;color:#ecd9b0;line-height:1.5;}
+  .land-end{text-align:center;padding:50px 20px 70px;}
+  .land-foot{text-align:center;padding:0 16px 30px;font-size:.72rem;color:#a08456;}
+
+  /* ===== game layer ===== */
+  #gameWrap{position:fixed;inset:0;background:#9fd4e8;}
+  canvas{display:block;width:100%;height:100%;}
   #hud{
     position:fixed;top:0;left:0;right:0;
     display:flex;align-items:center;gap:14px;
-    padding:10px 14px;
-    pointer-events:none;
-    z-index:5;
+    padding:10px 14px;pointer-events:none;z-index:5;
   }
   #hudFace{
     width:52px;height:52px;border-radius:50%;
     object-fit:cover;object-position:top;
-    border:3px solid var(--uo-yellow);
-    background:#fff;
+    border:3px solid var(--gold);background:#fff;
   }
   #hearts{font-size:1.4rem;letter-spacing:2px;filter:drop-shadow(1px 2px 0 rgba(0,0,0,.3));}
   #coinBox{
-    font-weight:900;color:var(--uo-green);
-    background:var(--uo-yellow);
-    border-radius:99px;padding:4px 14px;
-    box-shadow:0 3px 0 rgba(0,0,0,.25);
+    font-weight:900;color:var(--wood);background:var(--gold);
+    border-radius:99px;padding:4px 14px;box-shadow:0 3px 0 rgba(0,0,0,.25);
   }
   #zoneName{
-    margin-left:auto;
-    font-family:'Rye',serif;
-    color:var(--uo-green);
-    background:rgba(253,246,227,.85);
-    padding:4px 14px;border-radius:8px;
+    margin-left:auto;font-family:'Rye',serif;color:var(--ink);
+    background:rgba(243,232,201,.9);padding:4px 14px;
     font-size:clamp(.7rem,2.2vw,1rem);
+    border:2px solid var(--wood);
   }
-
-  /* dialogue */
   #dialogue{
     position:fixed;left:50%;bottom:110px;transform:translateX(-50%);
     width:min(640px,92vw);
-    background:var(--cream);color:var(--ink);
-    border:4px solid var(--uo-green);
-    border-radius:14px;
-    padding:16px 18px;
-    z-index:6;
-    box-shadow:0 10px 30px rgba(0,0,0,.35);
+    background:var(--paper);color:var(--ink);
+    border:4px solid var(--wood);
+    padding:16px 18px;z-index:6;
+    box-shadow:0 10px 30px rgba(0,0,0,.4);
   }
-  #dialogue h4{font-family:'Rye',serif;color:var(--uo-green);margin-bottom:6px;}
+  #dialogue h4{font-family:'Rye',serif;color:var(--rust);margin-bottom:6px;}
   #dialogue p{font-size:.95rem;line-height:1.5;margin-bottom:12px;}
   .choices{display:flex;gap:10px;flex-wrap:wrap;}
   .choices button{
     flex:1;min-width:150px;
     font-family:'Nunito';font-weight:900;font-size:.85rem;
-    background:var(--uo-green);color:var(--cream);
-    border:none;border-radius:9px;padding:10px 12px;cursor:pointer;
+    background:var(--wood);color:var(--paper);
+    border:none;padding:10px 12px;cursor:pointer;
   }
-  .choices button:hover{background:#1f6647;}
-
-  /* touch controls */
-  #touch{
-    position:fixed;bottom:0;left:0;right:0;
-    display:flex;justify-content:space-between;
-    padding:14px 16px;z-index:5;
-  }
+  .choices button:hover{background:var(--wood-light);}
+  #touch{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-between;padding:14px 16px;z-index:5;}
   .tgroup{display:flex;gap:12px;}
   .tbtn{
     width:64px;height:64px;border-radius:50%;
-    background:rgba(21,71,51,.55);
+    background:rgba(58,36,23,.55);
     border:3px solid rgba(254,225,35,.8);
-    color:var(--uo-yellow);
-    font-size:1.5rem;font-weight:900;
+    color:var(--gold);font-size:1.5rem;font-weight:900;
     display:flex;align-items:center;justify-content:center;
     touch-action:none;
   }
   @media (hover:hover) and (pointer:fine){ #touch{display:none;} }
-
-  /* toast */
   #toast{
     position:fixed;top:74px;left:50%;transform:translateX(-50%);
-    background:var(--uo-green);color:var(--uo-yellow);
+    background:var(--wood);color:var(--gold);
     font-weight:900;padding:8px 20px;border-radius:99px;
     z-index:7;opacity:0;transition:opacity .3s;
-    border:2px solid var(--uo-yellow);
-    pointer-events:none;
+    border:2px solid var(--gold);pointer-events:none;
     font-size:.9rem;text-align:center;
   }
-  .photo-credit{font-size:.65rem;color:#7fae92;}
+  #bossBar{
+    position:fixed;top:64px;left:50%;transform:translateX(-50%);
+    width:min(380px,80vw);z-index:5;display:none;
+  }
+  #bossBar .label{font-family:'Rye',serif;text-align:center;color:var(--paper);font-size:.8rem;text-shadow:1px 1px 0 #000;margin-bottom:3px;}
+  #bossBar .bar{height:14px;background:rgba(0,0,0,.45);border:2px solid var(--paper);}
+  #bossBar .fill{height:100%;background:var(--rust);width:100%;transition:width .2s;}
 </style>
 </head>
 <body>
 
-<!-- ============ TITLE SCREEN ============ -->
-<div id="titleScreen" class="screen">
-  <div class="wanted-banner">★ A EUGENE, OREGON ADVENTURE ★</div>
-  <h1 class="title">Lily &amp; Meg's<br>Adventure</h1>
-  <p class="subtitle">The legendary <b>Golden Duck Statue</b> has been stolen from Hayward Field and hidden on the summit of Spencer Butte! Run, jump, and whip your way across Eugene's most famous landmarks to get it back.</p>
-  <button class="btn" id="startBtn">Start the Adventure</button>
-  <p class="controls-hint">
-    <kbd>←</kbd><kbd>→</kbd> or <kbd>A</kbd><kbd>D</kbd> move &nbsp;•&nbsp;
-    <kbd>↑</kbd> / <kbd>W</kbd> / <kbd>Space</kbd> jump &nbsp;•&nbsp;
-    <kbd>X</kbd> or <kbd>J</kbd> whip attack<br>
-    On a phone? Touch buttons appear automatically.
-  </p>
-</div>
-
 <!-- ============ CHARACTER SELECT ============ -->
-<div id="charScreen" class="screen hidden">
+<div id="charScreen" class="screen">
   <h1 class="title" style="font-size:clamp(1.6rem,5vw,2.6rem)">Choose Your Hero</h1>
   <div class="char-row">
     <div class="char-card" id="cardMeg" onclick="selectChar('meg')">
-      <img src="Meg.jpg" alt="Meg">
+      <img class="meg-src" alt="Meg">
       <h3>Meg</h3>
-      <p>Tough as old growth timber. Her whip swing is a little stronger, and she starts with an extra heart.</p>
+      <p>Stronger whip attacks and an extra heart. Here for the 1,000 Duck Buck reward.</p>
     </div>
     <div class="char-card" id="cardLily" onclick="selectChar('lily')">
-      <img src="lily.png" alt="Lily">
-      <h3>Lily &amp; Mako</h3>
-      <p>Quick on her feet, and her cat Mako tags along — Mako sniffs out bonus Duck Bucks as you explore.</p>
+      <img class="lily-src" alt="Lily">
+      <h3>Lily</h3>
+      <p>Faster running and higher jumps. Here to bring her cat home before dinner.</p>
     </div>
   </div>
   <button class="btn" id="playBtn" disabled style="opacity:.5">Ride Out</button>
+  <p class="controls-hint">
+    <kbd>&#8592;</kbd><kbd>&#8594;</kbd> or <kbd>A</kbd><kbd>D</kbd> move &nbsp;&bull;&nbsp;
+    <kbd>&#8593;</kbd> / <kbd>W</kbd> / <kbd>Space</kbd> jump &nbsp;&bull;&nbsp;
+    <kbd>X</kbd> or <kbd>J</kbd> whip
+  </p>
 </div>
 
 <!-- ============ WIN SCREEN ============ -->
 <div id="winScreen" class="screen hidden">
-  <div class="wanted-banner">★ REWARD CLAIMED ★</div>
-  <h1 class="title" style="font-size:clamp(1.8rem,6vw,3.2rem)">The Golden Duck<br>Is Safe!</h1>
+  <div class="wanted-banner">&#9733; FUGITIVE APPREHENDED &#9733;</div>
+  <h1 class="title" style="font-size:clamp(1.8rem,6vw,3.2rem)">Mako Is<br>Grounded!</h1>
   <p class="subtitle" id="winText"></p>
   <button class="btn" onclick="location.reload()">Play Again</button>
+  <a href="index.html" style="color:var(--gold);font-size:.85rem;">&larr; Back to game home</a>
 </div>
 
 <!-- ============ GAME ============ -->
 <div id="gameWrap" class="hidden">
   <canvas id="game"></canvas>
   <div id="hud">
-    <img id="hudFace" src="Meg.jpg" alt="">
+    <img id="hudFace" alt="">
     <span id="hearts"></span>
-    <span id="coinBox">🦆 0</span>
+    <span id="coinBox">&#129414; 0</span>
     <span id="zoneName">Willamette Riverfront</span>
+  </div>
+  <div id="bossBar">
+    <div class="label">MAKO — THE WHISKERED BANDIT</div>
+    <div class="bar"><div class="fill" id="bossFill"></div></div>
   </div>
   <div id="dialogue" class="hidden">
     <h4 id="dTitle"></h4>
@@ -237,12 +263,12 @@
   <div id="toast"></div>
   <div id="touch">
     <div class="tgroup">
-      <div class="tbtn" id="tLeft">◀</div>
-      <div class="tbtn" id="tRight">▶</div>
+      <div class="tbtn" id="tLeft">&#9664;</div>
+      <div class="tbtn" id="tRight">&#9654;</div>
     </div>
     <div class="tgroup">
-      <div class="tbtn" id="tAttack">✦</div>
-      <div class="tbtn" id="tJump">▲</div>
+      <div class="tbtn" id="tAttack">&#10038;</div>
+      <div class="tbtn" id="tJump">&#9650;</div>
     </div>
   </div>
 </div>
@@ -250,15 +276,20 @@
 <script>
 "use strict";
 /* =====================================================
-   LILY & MEG'S ADVENTURE
-   A Cactus-McCoy-inspired side-scroller set in Eugene, OR
+   LILY & MEG'S ADVENTURE — THE HUNT FOR MAKO
+   A western run-and-whip platformer set in Eugene, OR
    ===================================================== */
 
-// ---------- screens & character select ----------
-let chosen = null;
 const $ = id => document.getElementById(id);
 
-$('startBtn').onclick = () => { $('titleScreen').classList.add('hidden'); $('charScreen').classList.remove('hidden'); };
+// ---------- embedded character photos ----------
+const MEG_IMG = "Meg.jpg";
+const LILY_IMG = "lily.png";
+document.querySelectorAll('img.meg-src').forEach(i=>i.src=MEG_IMG);
+document.querySelectorAll('img.lily-src').forEach(i=>i.src=LILY_IMG);
+
+// ---------- screens ----------
+let chosen = null;
 
 function selectChar(c){
   chosen = c;
@@ -275,37 +306,34 @@ $('playBtn').onclick = () => {
   startGame(chosen);
 };
 
-// ---------- canvas setup ----------
+// ---------- canvas ----------
 const cv = $('game'), ctx = cv.getContext('2d');
 let W=0,H=0,SCALE=1;
 function resize(){
   W = cv.width  = window.innerWidth  * devicePixelRatio;
   H = cv.height = window.innerHeight * devicePixelRatio;
-  SCALE = H / 560;   // the world is 560 units tall — always fit it to the screen
+  SCALE = H / 560;
 }
 window.addEventListener('resize', resize); resize();
 
-// ---------- world definition ----------
+// ---------- world ----------
 const WORLD_W = 7600;
-const GROUND_Y = 470;          // world units; world is ~560 tall
+const GROUND_Y = 470;
 const GRAV = 0.62, MOVE = 0.85, MAXVX = 5.2, JUMP = -12.6, FRICTION = 0.82;
 
-// gaps in the ground = the Willamette river / mill race
 const gaps = [ [1280,1420], [2980,3120], [4660,4830], [6120,6260] ];
 
-// floating platforms  [x, y, w]
 const plats = [
-  [1240,395,80],[1330,350,90],          // river hop 1
+  [1240,395,80],[1330,350,90],
   [1700,380,110],[2150,360,120],
-  [2930,390,90],[3040,345,100],         // river hop 2
+  [2930,390,90],[3040,345,100],
   [3450,370,130],[3900,330,110],
-  [4600,400,80],[4700,355,90],[4790,395,80],  // river hop 3
+  [4600,400,80],[4700,355,90],[4790,395,80],
   [5200,360,140],[5650,330,120],
-  [6080,395,80],[6180,350,95],          // river hop 4
-  [6600,370,130],[6950,320,120],[7180,275,110]  // climb to summit
+  [6080,395,80],[6180,350,95],
+  [6600,370,130],[6950,320,120],[7180,275,110]
 ];
 
-// zones / landmarks  [startX, name]
 const zones = [
   [0,    "Willamette Riverfront"],
   [1450, "Skinner Butte"],
@@ -315,74 +343,79 @@ const zones = [
   [6500, "Spencer Butte Summit Trail"]
 ];
 
-// coins (Duck Bucks)
 let coins = [];
 function seedCoins(){
   coins = [];
   const spots = [300,420,540,900,1050,1265,1370,1740,1980,2180,2400,2620,
                  2960,3075,3300,3490,3700,3940,4200,4420,4630,4725,4815,
-                 5000,5240,5500,5690,5900,6110,6210,6450,6640,6850,6990,7210,7350];
+                 5000,5240,5500,5690,5900,6110,6210,6450,6640,6850,6990,7210];
   for(const x of spots){
     let y = GROUND_Y - 60;
     for(const p of plats){ if(x>=p[0]-10 && x<=p[0]+p[2]+10) y = p[1]-42; }
-    coins.push({x, y, taken:false, t:Math.random()*6});
+    coins.push({x, y, taken:false});
   }
 }
 
-// enemies
-let enemies = [];
+/* ---------- enemies: every villain is Mako (well... a decoy) ----------
+   prowler — a Mako decoy that paces the ground
+   swooper — a Mako decoy that pounces from the air
+   tumbler — a Mako decoy curled into a rolling furball
+   boss    — the REAL Mako, waiting at the summit                      */
+let enemies = [], boss = null;
 function seedEnemies(){
   enemies = [
-    goose(760), goose(1850), cloud(1100,330), football(2300),
-    goose(2550), cloud(2870,300), goose(3350), football(3650),
-    cloud(3520,310), goose(4150), football(4350), goose(4980),
-    cloud(4740,300), goose(5450), football(5750), goose(5980),
-    cloud(6160,305), goose(6700), football(7050), goose(7300)
+    prowler(760), prowler(1850), swooper(1100,330), tumbler(2300),
+    prowler(2550), swooper(2870,300), prowler(3350), tumbler(3650),
+    swooper(3520,310), prowler(4150), tumbler(4350), prowler(4980),
+    swooper(4740,300), prowler(5450), tumbler(5750), prowler(5980),
+    swooper(6160,305), prowler(6700), tumbler(7050)
   ];
+  boss = {kind:'boss', x:7280, y:GROUND_Y-58, w:54, h:58, dir:-1,
+          range:[7160,7330], hp:10, maxHp:10, dead:false, t:0, lungeT:0};
+  enemies.push(boss);
 }
-function goose(x){ return {kind:'goose', x, y:GROUND_Y-34, w:34, h:34, dir:1, range:[x-110,x+110], hp:2, dead:false, t:Math.random()*9}; }
-function cloud(x,y){ return {kind:'cloud', x, y, baseY:y, w:46, h:30, hp:2, dead:false, t:Math.random()*9}; }
-function football(x){ return {kind:'ball', x, y:GROUND_Y-26, w:26, h:26, vy:0, dir:1, range:[x-140,x+140], hp:1, dead:false, t:0}; }
+function prowler(x){ return {kind:'prowler', x, y:GROUND_Y-30, w:38, h:30, dir:1, range:[x-110,x+110], hp:2, dead:false, t:Math.random()*9}; }
+function swooper(x,y){ return {kind:'swooper', x, y, baseY:y, w:40, h:28, hp:2, dead:false, t:Math.random()*9}; }
+function tumbler(x){ return {kind:'tumbler', x, y:GROUND_Y-26, w:26, h:26, vy:0, dir:1, range:[x-140,x+140], hp:1, dead:false, t:0}; }
 
-// landmark dialogue events  {x, title, text, choices:[{label, effect, toast}]}
+// ---------- landmark events ----------
 let events;
 function seedEvents(){
   events = [
     { x:1500, done:false, title:"Skinner Butte",
-      text:"You reach the foot of Skinner Butte, the big hill watching over downtown. A friendly hiker waves. \"The trail's steep — want a granola bar, or a tip about the path ahead?\"",
+      text:"A hiker at the foot of Skinner Butte points up the trail. \"A grey cat with a red bandana came through at dawn, dragging something shiny. Smug little thing. Here — take something for the road.\"",
       choices:[
-        {label:"Take the granola bar (+1 heart)", effect:s=>{s.hp=Math.min(s.maxHp,s.hp+1);}, toast:"+1 heart!"},
-        {label:"Take the tip (+5 Duck Bucks)", effect:s=>{s.coins+=5;}, toast:"\"Mind the geese by the river!\" +5 🦆"}
+        {label:"Granola bar (+1 heart)", effect:s=>{s.hp=Math.min(s.maxHp,s.hp+1);}, toast:"+1 heart!"},
+        {label:"Trail gossip (+5 Duck Bucks)", effect:s=>{s.coins+=5;}, toast:"\"His decoys can't swim!\" +5"}
       ]},
     { x:2780, done:false, title:"Eugene Saturday Market",
-      text:"Stalls, music, and the smell of fresh bread — it's the Saturday Market! A vendor admires your courage. \"Trade you, traveler. What'll it be?\"",
+      text:"The Saturday Market is in chaos — Mako's decoy gang cleaned out an entire salmon stall. The vendor wipes her hands: \"Catch that cat and the city owes you. Meanwhile, take your pick.\"",
       choices:[
         {label:"Hearty soup (+1 heart)", effect:s=>{s.hp=Math.min(s.maxHp,s.hp+1);}, toast:"Warm and restored! +1 heart"},
-        {label:"Lucky tie-dye bandana (+8 🦆)", effect:s=>{s.coins+=8;}, toast:"Stylish AND profitable! +8 🦆"}
+        {label:"Lucky bandana (+8 Duck Bucks)", effect:s=>{s.coins+=8;}, toast:"Stylish AND profitable! +8"}
       ]},
     { x:4080, done:false, title:"Hayward Field",
-      text:"The legendary track at Hayward Field gleams. A coach jogs over: \"This is where the Golden Duck was stolen! Take a lap with me and I'll teach you something.\"",
+      text:"The scene of the crime. The coach shakes his head: \"Saw the whole thing. That cat cleared the fence like a champion hurdler. You'll need training to catch him — pick your event.\"",
       choices:[
-        {label:"Sprint training (move faster!)", effect:s=>{s.speedBoost=1.18;}, toast:"Track speed unlocked! 🏃"},
-        {label:"High-jump drills (jump higher!)", effect:s=>{s.jumpBoost=1.1;}, toast:"Hayward hops unlocked! ⬆"}
+        {label:"Sprint training (move faster!)", effect:s=>{s.speedBoost*=1.15;}, toast:"Track speed unlocked!"},
+        {label:"High-jump drills (jump higher!)", effect:s=>{s.jumpBoost*=1.09;}, toast:"Hayward hops unlocked!"}
       ]},
     { x:5430, done:false, title:"Autzen Stadium",
-      text:"Autzen Stadium roars even when it's empty. A groundskeeper leans on his rake: \"The thief headed for Spencer Butte. It gets rough out there — pick your boost.\"",
+      text:"The Autzen groundskeeper looks haunted. \"Decoy cats in the bleachers. Decoy cats in the end zone. The real one went up the butte with the Duck. Finish this — and take a boost.\"",
       choices:[
         {label:"Full heal + 1 max heart", effect:s=>{s.maxHp+=1; s.hp=s.maxHp;}, toast:"GO DUCKS! Max hearts up!"},
-        {label:"Pocketful of Duck Bucks (+12)", effect:s=>{s.coins+=12;}, toast:"Cha-ching! +12 🦆"}
+        {label:"Pocketful of Duck Bucks (+12)", effect:s=>{s.coins+=12;}, toast:"Cha-ching! +12"}
       ]},
     { x:6560, done:false, title:"Spencer Butte Trailhead",
-      text:"The summit trail rises ahead through the firs. Almost there. Mist rolls in... the Golden Duck glints somewhere above. One last push!",
+      text:"Paw prints everywhere. Fresh ones. Above the treeline you spot a small grey silhouette with a golden duck under one arm. Mako is waiting at the summit. This ends now.",
       choices:[
-        {label:"Let's finish this!", effect:()=>{}, toast:"To the summit!"}
+        {label:"Showdown time.", effect:()=>{}, toast:"To the summit!"}
       ]}
   ];
 }
 
 // ---------- player ----------
 let P, cam, running=false, paused=false, won=false;
-let mako = null;
 
 function startGame(char){
   seedCoins(); seedEnemies(); seedEvents();
@@ -394,13 +427,12 @@ function startGame(char){
     maxHp: char==='meg'?4:3,
     coins:0,
     atkPower: char==='meg'?2:1,
-    speedBoost:1, jumpBoost:1,
+    speedBoost: char==='lily'?1.12:1,
+    jumpBoost:  char==='lily'?1.05:1,
     attackT:0, hurtT:0, checkpoint:{x:120,y:GROUND_Y-60},
     walkT:0
   };
-  if(char==='lily') mako = {x:60,y:GROUND_Y-20,vx:0,vy:0,t:0, sniffT:0};
-  else mako = null;
-  $('hudFace').src = char==='meg' ? 'Meg.jpg' : 'lily.png';
+  $('hudFace').src = char==='meg' ? MEG_IMG : LILY_IMG;
   cam = {x:0};
   running = true; won=false;
   updateHud();
@@ -431,11 +463,17 @@ function showToast(msg){
   clearTimeout(t._tm); t._tm = setTimeout(()=>t.style.opacity=0, 1800);
 }
 function updateHud(){
-  $('hearts').textContent = '❤️'.repeat(P.hp) + '🖤'.repeat(P.maxHp-P.hp);
-  $('coinBox').textContent = '🦆 ' + P.coins;
+  $('hearts').textContent = '\u2764\uFE0F'.repeat(P.hp) + '\uD83D\uDDA4'.repeat(P.maxHp-P.hp);
+  $('coinBox').textContent = '\uD83E\uDD86 ' + P.coins;
   let zn = zones[0][1];
   for(const z of zones) if(P.x >= z[0]) zn = z[1];
   $('zoneName').textContent = zn;
+}
+function updateBossBar(){
+  const bar = $('bossBar');
+  if(!boss || boss.dead || P.x < 6900){ bar.style.display='none'; return; }
+  bar.style.display='block';
+  $('bossFill').style.width = (100*boss.hp/boss.maxHp) + '%';
 }
 
 // ---------- dialogue ----------
@@ -463,7 +501,6 @@ function openDialogue(ev){
 function update(){
   if(paused) return;
 
-  // movement
   const L = keys['arrowleft']||keys['a'], R = keys['arrowright']||keys['d'];
   if(L){ P.vx -= MOVE*P.speedBoost; P.face=-1; }
   if(R){ P.vx += MOVE*P.speedBoost; P.face=1; }
@@ -475,7 +512,6 @@ function update(){
     P.vy = JUMP*P.jumpBoost; P.onGround = false;
   }
 
-  // attack
   if((keys['x']||keys['j']) && P.attackT<=0) P.attackT = 22;
   if(P.attackT>0) P.attackT--;
   if(P.hurtT>0) P.hurtT--;
@@ -486,7 +522,6 @@ function update(){
   P.x = Math.max(10, Math.min(WORLD_W-40, P.x));
   if(Math.abs(P.vx)>.5 && P.onGround) P.walkT++;
 
-  // ground & platform collision
   P.onGround = false;
   const feet = P.y + P.h;
   if(!overGap(P.x + P.w/2)){
@@ -502,69 +537,68 @@ function update(){
     }
   }
 
-  // fell in the river
   if(P.y > 700){ hurt(1, true); }
 
-  // checkpoints at zone starts
   for(const z of zones){
     if(P.x >= z[0] && P.checkpoint.x < z[0]){
       P.checkpoint = {x:z[0]+30, y:GROUND_Y-60};
     }
   }
 
-  // coins
   for(const c of coins){
     if(c.taken) continue;
-    c.t += .12;
     if(Math.abs(P.x+P.w/2 - c.x) < 26 && Math.abs(P.y+P.h/2 - c.y) < 36){
       c.taken = true; P.coins++; updateHud();
     }
   }
 
-  // mako the cat (lily only) — follows, and occasionally sniffs out bonus bucks
-  if(mako){
-    mako.t += .15;
-    const tx = P.x - 46*P.face;
-    mako.vx += (tx - mako.x)*0.045;
-    mako.vx *= .82;
-    mako.x += mako.vx;
-    let my = GROUND_Y-20;
-    if(!overGap(mako.x+10)) mako.y += (my - mako.y)*.2;
-    else mako.y = P.y+30;
-    mako.sniffT++;
-    if(mako.sniffT > 60*18){      // every ~18 seconds
-      mako.sniffT = 0;
-      P.coins += 2; updateHud();
-      showToast("Mako sniffed out 2 Duck Bucks! 🐈");
-    }
-  }
-
-  // enemies
+  // enemies — Mako's decoy gang (and the real Mako at the end)
   for(const e of enemies){
     if(e.dead) continue;
     e.t += .1;
-    if(e.kind==='goose'){
+    if(e.kind==='prowler'){
       e.x += e.dir*1.3;
       if(e.x < e.range[0] || e.x > e.range[1]) e.dir*=-1;
-    }else if(e.kind==='cloud'){
-      e.y = e.baseY + Math.sin(e.t)*22;
-      e.x += Math.cos(e.t*.6)*.7;
-    }else if(e.kind==='ball'){
+    }else if(e.kind==='swooper'){
+      e.y = e.baseY + Math.sin(e.t*.8)*18;
+      e.x += Math.cos(e.t*.5)*.5;
+    }else if(e.kind==='tumbler'){
       e.x += e.dir*2.1;
       if(e.x < e.range[0] || e.x > e.range[1]) e.dir*=-1;
       e.vy += GRAV;
       e.y += e.vy;
       if(e.y+e.h >= GROUND_Y){ e.y = GROUND_Y-e.h; e.vy = -9; }
+    }else if(e.kind==='boss'){
+      // the real Mako: stalks back and forth, lunges at the hero
+      e.lungeT--;
+      const dist = Math.abs((P.x+P.w/2)-(e.x+e.w/2));
+      if(dist < 320 && e.lungeT < -90){ e.lungeT = 36; }     // wind up a lunge
+      if(e.lungeT > 0){
+        e.x += (P.x > e.x ? 3.4 : -3.4);
+      }else{
+        e.x += e.dir*1.1;
+        if(e.x < e.range[0]) e.dir = 1;
+        if(e.x > e.range[1]) e.dir = -1;
+      }
+      e.x = Math.max(6960, Math.min(7430, e.x));
     }
 
     // whip hit
     if(P.attackT > 12){
       const reach = 58;
       const hx = P.face===1 ? P.x+P.w : P.x-reach;
-      if(e.x+e.w > hx && e.x < hx+reach && Math.abs((e.y+e.h/2)-(P.y+P.h/2)) < 55){
+      if(e.x+e.w > hx && e.x < hx+reach && Math.abs((e.y+e.h/2)-(P.y+P.h/2)) < 60){
         e.hp -= P.atkPower;
-        if(e.hp<=0){ e.dead = true; P.coins += 3; updateHud(); showToast("+3 🦆"); }
-        else { e.x += P.face*36; }
+        if(e.hp<=0){
+          e.dead = true;
+          if(e.kind==='boss'){
+            P.coins += 25; showToast("Mako surrenders the Golden Duck! +25");
+          }else{
+            P.coins += 3; showToast("A decoy! It was a decoy Mako! +3");
+          }
+          updateHud();
+        }
+        else { e.x += P.face*(e.kind==='boss'?20:36); }
         P.attackT = 12;
       }
     }
@@ -577,26 +611,26 @@ function update(){
       P.vy = -6;
     }
   }
+  updateBossBar();
 
-  // landmark events
   for(const ev of events){
     if(!ev.done && P.x >= ev.x){ ev.done = true; openDialogue(ev); }
   }
 
-  // WIN — summit flag
-  if(P.x > 7380 && !won){
+  // WIN — only after the real Mako is caught
+  if(boss.dead && P.x > 7380 && !won){
     won = true; running = false;
     const name = P.char==='meg' ? 'Meg' : 'Lily';
-    const buddy = P.char==='lily' ? ' With Mako purring on her shoulder, she' : ' She';
+    const ending = P.char==='lily'
+      ? "Lily scooped up her fugitive cat, who immediately began purring like nothing happened. \"You are SO grounded,\" she whispered into his fur."
+      : "Meg collected the full 1,000 Duck Buck reward and personally escorted the Whiskered Bandit home to Lily — who grounded him on the spot.";
     $('winText').textContent =
-      name + " climbed the last switchback of Spencer Butte and pried the Golden Duck from the bandit's stash. " +
-      buddy + " carried it home past Autzen, Hayward Field, the Saturday Market, and Skinner Butte as all of Eugene cheered. " +
-      "Final treasure: " + P.coins + " Duck Bucks! 🦆";
+      name + " cornered Mako on the summit of Spencer Butte and pried the Golden Duck from his paws. " + ending +
+      " The statue was returned to Hayward Field by sundown. Trail earnings: " + P.coins + " Duck Bucks!";
     $('gameWrap').classList.add('hidden');
     $('winScreen').classList.remove('hidden');
   }
 
-  // camera
   const viewW = W/SCALE;
   cam.x = Math.max(0, Math.min(WORLD_W - viewW, P.x - viewW*0.42));
 }
@@ -604,10 +638,9 @@ function update(){
 function hurt(n, fell){
   P.hp -= n; P.hurtT = 70;
   if(P.hp <= 0 || fell){
-    if(P.hp<=0){ P.hp = P.maxHp; showToast("Ouch! Back to the last landmark…"); }
-    else showToast("Splash! 🌊");
+    if(P.hp<=0){ P.hp = P.maxHp; showToast("Mako got the drop on you! Back to the last landmark\u2026"); }
+    else showToast("Splash!");
     P.x = P.checkpoint.x; P.y = P.checkpoint.y; P.vx=0; P.vy=0;
-    if(mako){ mako.x = P.x-40; mako.y = GROUND_Y-20; }
   }
   updateHud();
 }
@@ -624,87 +657,124 @@ function draw(){
 
   const vx0 = cam.x, vx1 = cam.x + W/SCALE;
 
-  // sky
+  // desert sky — pale blue fading to dusty horizon
   const sky = ctx.createLinearGradient(0,0,0,560);
-  sky.addColorStop(0,'#aee0f2'); sky.addColorStop(1,'#e8f6dc');
+  sky.addColorStop(0,'#9fd4e8');
+  sky.addColorStop(.62,'#cfe3d8');
+  sky.addColorStop(1,'#f0d9a6');
   ctx.fillStyle = sky; ctx.fillRect(vx0,-200,vx1-vx0,900);
 
-  drawParallaxHills(vx0,vx1);
+  drawDesertBackdrop(vx0,vx1);
   drawLandmarks(vx0,vx1);
 
-  // ground
+  // ground — dry sandstone, flat and quiet like a classic canyon level
   for(let gx = Math.floor(vx0/40)*40; gx < vx1; gx+=40){
     if(overGap(gx+20)) continue;
-    ctx.fillStyle = '#5ea35e';
-    ctx.fillRect(gx,GROUND_Y,40,12);
-    ctx.fillStyle = '#8a5a33';
-    ctx.fillRect(gx,GROUND_Y+12,40,120);
+    ctx.fillStyle = '#c99b5e';
+    ctx.fillRect(gx,GROUND_Y,40,14);
+    ctx.fillStyle = '#9c6a3d';
+    ctx.fillRect(gx,GROUND_Y+14,40,46);
+    ctx.fillStyle = '#7e5230';
+    ctx.fillRect(gx,GROUND_Y+60,40,80);
   }
-  // river in gaps
+  // sparse pebbles on the ledge line (static)
+  ctx.fillStyle = '#8a5a33';
+  for(let gx = Math.floor(vx0/160)*160; gx < vx1; gx+=160){
+    if(!overGap(gx+12)) ctx.fillRect(gx+12,GROUND_Y-4,8,4);
+    if(!overGap(gx+90)) ctx.fillRect(gx+90,GROUND_Y-3,5,3);
+  }
+  // river gulches
   for(const g of gaps){
     if(g[1]<vx0||g[0]>vx1) continue;
-    ctx.fillStyle = '#3f7fb5';
-    ctx.fillRect(g[0],GROUND_Y+40,g[1]-g[0],100);
-    ctx.fillStyle = 'rgba(255,255,255,.5)';
-    for(let i=0;i<4;i++){
-      const wx = g[0]+ (g[1]-g[0])*( (i*.27 + (performance.now()/2000)) %1 );
-      ctx.fillRect(wx, GROUND_Y+52+i*16, 22, 3);
-    }
+    ctx.fillStyle = '#8a5a33';
+    ctx.fillRect(g[0]-6,GROUND_Y,6,140); ctx.fillRect(g[1],GROUND_Y,6,140);
+    ctx.fillStyle = '#5f87a8';
+    ctx.fillRect(g[0],GROUND_Y+48,g[1]-g[0],100);
+    ctx.fillStyle = 'rgba(255,255,255,.25)';
+    ctx.fillRect(g[0],GROUND_Y+48,g[1]-g[0],4);
   }
-  // platforms
+  // wooden plank platforms
   for(const p of plats){
     if(p[0]+p[2]<vx0||p[0]>vx1) continue;
-    ctx.fillStyle = '#7a4f2b'; ctx.fillRect(p[0],p[1],p[2],14);
-    ctx.fillStyle = '#5ea35e'; ctx.fillRect(p[0],p[1],p[2],5);
+    ctx.fillStyle = '#7e4f2a'; ctx.fillRect(p[0],p[1],p[2],14);
+    ctx.fillStyle = '#9c6a3d'; ctx.fillRect(p[0],p[1],p[2],4);
+    ctx.strokeStyle = '#5e3a1e'; ctx.lineWidth = 1;
+    for(let bx = p[0]+22; bx < p[0]+p[2]; bx+=22){
+      ctx.beginPath(); ctx.moveTo(bx,p[1]); ctx.lineTo(bx,p[1]+14); ctx.stroke();
+    }
   }
 
-  // coins
+  // duck buck coins — calm, no bobbing
   for(const c of coins){
     if(c.taken || c.x<vx0-40 || c.x>vx1+40) continue;
-    const bob = Math.sin(c.t)*4;
-    ctx.save(); ctx.translate(c.x, c.y+bob);
-    ctx.fillStyle = '#FEE123'; ctx.beginPath(); ctx.arc(0,0,11,0,7); ctx.fill();
+    ctx.fillStyle = '#FEE123'; ctx.beginPath(); ctx.arc(c.x,c.y,11,0,7); ctx.fill();
     ctx.strokeStyle = '#b8a200'; ctx.lineWidth=2; ctx.stroke();
-    ctx.fillStyle = '#154733'; ctx.font='bold 11px Nunito'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText('🦆',0,1);
-    ctx.restore();
+    ctx.fillStyle = '#9c6a3d'; ctx.font='bold 11px Nunito'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('\uD83E\uDD86', c.x, c.y+1);
   }
 
-  // enemies
-  for(const e of enemies){ if(!e.dead && e.x>vx0-80 && e.x<vx1+80) drawEnemy(e); }
+  for(const e of enemies){ if(!e.dead && e.x>vx0-80 && e.x<vx1+120) drawEnemy(e); }
 
-  // summit flag
-  drawFlag(7400);
-
-  if(mako) drawMako();
+  drawFlag(7440);
   drawPlayer();
 }
 
-function drawParallaxHills(vx0,vx1){
+/* ---------- desert canyon backdrop: flat mesas, cacti, quiet ---------- */
+function drawDesertBackdrop(vx0,vx1){
+  // far mesa layer
   ctx.save();
-  ctx.translate(cam.x*0.5,0);   // slow layer
-  ctx.fillStyle = '#9cc4a0';
+  ctx.translate(cam.x*0.6,0);
+  ctx.fillStyle = '#d8b07a';
   for(let i=-1;i<14;i++){
-    const hx = i*640 ;
-    ctx.beginPath(); ctx.arc(hx,520,260,Math.PI,0); ctx.fill();
+    const mx = i*620;
+    mesa(mx, 470, 280, 130);
+    mesa(mx+360, 470, 160, 90);
   }
   ctx.restore();
+  // near mesa layer
   ctx.save();
-  ctx.translate(cam.x*0.25,0);
-  ctx.fillStyle = '#b9d8b0';
-  for(let i=-1;i<10;i++){
-    const hx = i*900+300;
-    ctx.beginPath(); ctx.arc(hx,540,330,Math.PI,0); ctx.fill();
+  ctx.translate(cam.x*0.35,0);
+  ctx.fillStyle = '#c2925a';
+  for(let i=-1;i<11;i++){
+    const mx = i*840+200;
+    mesa(mx, 470, 230, 180);
   }
   ctx.restore();
-  // firs scattered (parallax mid)
+  // mid-ground cacti & dry brush
   ctx.save();
   ctx.translate(cam.x*0.15,0);
-  for(let i=0;i<26;i++){
-    const tx = i*430+90;
-    fir(tx, 470, 0.8+((i*37)%3)*0.25, '#2e6b46');
+  for(let i=0;i<30;i++){
+    const tx = i*380+70;
+    if(((i*13)%4)===0) deadBush(tx, 468);
+    else saguaro(tx, 470, .8+((i*37)%3)*.22);
   }
   ctx.restore();
+}
+function mesa(x, baseY, w, h){
+  // flat-topped butte with a slight taper
+  ctx.beginPath();
+  ctx.moveTo(x, baseY);
+  ctx.lineTo(x+w*0.12, baseY-h);
+  ctx.lineTo(x+w*0.88, baseY-h);
+  ctx.lineTo(x+w, baseY);
+  ctx.closePath(); ctx.fill();
+}
+function saguaro(x, baseY, s){
+  ctx.fillStyle = '#4e7a4a';
+  const w = 12*s, h = 70*s;
+  ctx.fillRect(x-w/2, baseY-h, w, h);                       // trunk
+  ctx.fillRect(x-w/2-14*s, baseY-h*0.62, 10*s, 26*s);       // left arm up
+  ctx.fillRect(x-w/2-14*s, baseY-h*0.62, 16*s, 9*s);
+  ctx.fillRect(x+w/2+4*s,  baseY-h*0.48, 10*s, 20*s);       // right arm
+  ctx.fillRect(x+w/2-6*s,  baseY-h*0.48, 16*s, 9*s);
+}
+function deadBush(x, baseY){
+  ctx.strokeStyle = '#8a6a3d'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(x,baseY); ctx.lineTo(x-7,baseY-13);
+  ctx.moveTo(x,baseY); ctx.lineTo(x+1,baseY-16);
+  ctx.moveTo(x,baseY); ctx.lineTo(x+8,baseY-11);
+  ctx.stroke();
 }
 function fir(x,baseY,s,color){
   ctx.fillStyle = color;
@@ -718,133 +788,141 @@ function fir(x,baseY,s,color){
 }
 
 function sign(x, label){
-  ctx.fillStyle = '#5b3a1e'; ctx.fillRect(x-4,GROUND_Y-66,8,66);
-  ctx.fillStyle = '#fdf6e3'; ctx.fillRect(x-66,GROUND_Y-96,132,36);
-  ctx.strokeStyle = '#154733'; ctx.lineWidth = 3; ctx.strokeRect(x-66,GROUND_Y-96,132,36);
-  ctx.fillStyle = '#154733'; ctx.font = 'bold 11px Nunito';
+  ctx.fillStyle = '#5e3a1e'; ctx.fillRect(x-4,GROUND_Y-66,8,66);
+  ctx.fillStyle = '#f3e8c9'; ctx.fillRect(x-66,GROUND_Y-96,132,36);
+  ctx.strokeStyle = '#5e3a1e'; ctx.lineWidth = 3; ctx.strokeRect(x-66,GROUND_Y-96,132,36);
+  ctx.fillStyle = '#2b1a10'; ctx.font = 'bold 11px Nunito';
   ctx.textAlign = 'center'; ctx.textBaseline='middle';
   ctx.fillText(label, x, GROUND_Y-78, 124);
 }
 
 function drawLandmarks(vx0,vx1){
-  // Skinner Butte — green hill with flagpole, ~1500-2300
+  // Skinner Butte — a sandstone butte with firs on top
   if(2400>vx0 && 1450<vx1){
-    ctx.fillStyle = '#4f8d5d';
+    ctx.fillStyle = '#b5713d';
     ctx.beginPath(); ctx.moveTo(1500,GROUND_Y);
-    ctx.quadraticCurveTo(1950,140,2400,GROUND_Y); ctx.fill();
-    fir(1750,330,1,'#2e6b46'); fir(2100,320,1.1,'#2e6b46'); fir(1950,250,0.9,'#1f5236');
-    ctx.fillStyle='#888'; ctx.fillRect(1948,160,4,60);
-    ctx.fillStyle='#c0392b'; ctx.fillRect(1952,160,26,14);
+    ctx.lineTo(1640,200); ctx.lineTo(2260,200); ctx.lineTo(2400,GROUND_Y);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#9c5c33';
+    ctx.fillRect(1640,200,620,16);
+    fir(1800,200,.9,'#3c6b44'); fir(1980,196,1,'#2e5a38'); fir(2150,200,.85,'#3c6b44');
     sign(1520,"SKINNER BUTTE");
   }
-  // Saturday Market — striped stalls ~2780-3500
+  // Saturday Market — canvas-awning frontier stalls
   if(3600>vx0 && 2700<vx1){
     for(let i=0;i<3;i++){
       const sx = 2820+i*240;
-      ctx.fillStyle = '#fdf6e3'; ctx.fillRect(sx,GROUND_Y-110,150,110);
-      ctx.fillStyle = i%2? '#c0392b':'#154733';
-      for(let s2=0;s2<5;s2++){ if(s2%2===0){ ctx.fillRect(sx+s2*30,GROUND_Y-140,30,34);} }
-      ctx.fillStyle = '#FEE123';
-      for(let s2=1;s2<5;s2+=2){ ctx.fillRect(sx+s2*30,GROUND_Y-140,30,34); }
-      ctx.fillStyle='#5b3a1e';
-      ctx.fillRect(sx+8,GROUND_Y-60,40,60); ctx.fillRect(sx+100,GROUND_Y-60,40,60);
+      ctx.fillStyle = '#8a5a33'; ctx.fillRect(sx,GROUND_Y-100,150,100);          // wood stall
+      ctx.strokeStyle = '#5e3a1e'; ctx.lineWidth=2; ctx.strokeRect(sx,GROUND_Y-100,150,100);
+      ctx.fillStyle = i%2 ? '#b7410e' : '#f3e8c9';                               // awning
+      ctx.beginPath(); ctx.moveTo(sx-10,GROUND_Y-100);
+      ctx.lineTo(sx+75,GROUND_Y-132); ctx.lineTo(sx+160,GROUND_Y-100); ctx.fill();
+      ctx.fillStyle = '#2b1a10';
+      ctx.fillRect(sx+18,GROUND_Y-56,46,56); ctx.fillRect(sx+90,GROUND_Y-56,46,56);
     }
     sign(2760,"SATURDAY MARKET");
   }
-  // Hayward Field — tower + track ~4080-4600
+  // Hayward Field — tower + track
   if(4750>vx0 && 4000<vx1){
-    ctx.fillStyle = '#b7410e';                     // track
+    ctx.fillStyle = '#a8542e';
     ctx.fillRect(4080,GROUND_Y-8,520,8);
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#f3e8c9';
     for(let i=0;i<9;i++) ctx.fillRect(4090+i*58,GROUND_Y-6,30,2);
-    // the iconic Hayward tower
     ctx.fillStyle = '#d9cfc0';
     ctx.beginPath(); ctx.moveTo(4360,GROUND_Y-8); ctx.lineTo(4385,GROUND_Y-235); ctx.lineTo(4430,GROUND_Y-235); ctx.lineTo(4455,GROUND_Y-8); ctx.fill();
     ctx.fillStyle = '#154733'; ctx.fillRect(4385,GROUND_Y-235,45,16);
     ctx.fillStyle = '#FEE123'; ctx.font='bold 12px Nunito'; ctx.textAlign='center';
     ctx.fillText('O', 4407, GROUND_Y-222);
-    // grandstand canopy
-    ctx.fillStyle = '#9aa7ad';
+    ctx.fillStyle = '#b09a86';
     ctx.beginPath(); ctx.moveTo(4460,GROUND_Y-8); ctx.quadraticCurveTo(4560,GROUND_Y-150,4660,GROUND_Y-8); ctx.fill();
     sign(4040,"HAYWARD FIELD");
   }
-  // Autzen Stadium ~5430-6000
+  // Autzen Stadium — weathered frontier arena
   if(6100>vx0 && 5350<vx1){
     ctx.fillStyle = '#154733';
     ctx.beginPath(); ctx.moveTo(5480,GROUND_Y); ctx.quadraticCurveTo(5740,GROUND_Y-260,6000,GROUND_Y); ctx.fill();
     ctx.fillStyle = '#FEE123'; ctx.font="bold 26px 'Rye'"; ctx.textAlign='center';
     ctx.fillText('AUTZEN', 5740, GROUND_Y-90);
-    ctx.fillStyle = '#9aa7ad';
-    ctx.fillRect(5560,GROUND_Y-170,10,60); ctx.fillRect(5910,GROUND_Y-170,10,60); // light poles
-    ctx.fillStyle = '#e8e8e8';
+    ctx.fillStyle = '#8a8378';
+    ctx.fillRect(5560,GROUND_Y-170,10,60); ctx.fillRect(5910,GROUND_Y-170,10,60);
+    ctx.fillStyle = '#d9cfc0';
     ctx.fillRect(5544,GROUND_Y-186,42,16); ctx.fillRect(5894,GROUND_Y-186,42,16);
     sign(5390,"AUTZEN STADIUM");
   }
-  // Spencer Butte — big summit at the end
+  // Spencer Butte — the rocky summit where Mako waits
   if(7600>vx0 && 6500<vx1){
-    ctx.fillStyle = '#3f7a52';
+    ctx.fillStyle = '#a3653a';
     ctx.beginPath(); ctx.moveTo(6560,GROUND_Y);
-    ctx.quadraticCurveTo(7100,60,7600,GROUND_Y); ctx.fill();
-    ctx.fillStyle = '#6e6e6e';                      // rocky cap
-    ctx.beginPath(); ctx.moveTo(7020,250); ctx.quadraticCurveTo(7100,120,7220,240); ctx.fill();
-    fir(6750,360,1.2,'#1f5236'); fir(6900,300,1,'#2e6b46'); fir(7300,300,1.1,'#1f5236');
+    ctx.lineTo(6900,180); ctx.lineTo(7250,140); ctx.lineTo(7600,GROUND_Y);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#7e6a5a';
+    ctx.beginPath(); ctx.moveTo(7020,250); ctx.lineTo(7110,140); ctx.lineTo(7220,240); ctx.closePath(); ctx.fill();
+    fir(6750,360,1.1,'#2e5a38'); fir(6900,300,.95,'#3c6b44'); fir(7300,300,1,'#2e5a38');
     sign(6540,"SPENCER BUTTE");
   }
 }
 
 function drawFlag(x){
-  ctx.fillStyle='#888'; ctx.fillRect(x,GROUND_Y-130,5,130);
+  ctx.fillStyle='#8a8378'; ctx.fillRect(x,GROUND_Y-130,5,130);
   ctx.fillStyle='#FEE123';
   ctx.beginPath(); ctx.moveTo(x+5,GROUND_Y-130); ctx.lineTo(x+70,GROUND_Y-112); ctx.lineTo(x+5,GROUND_Y-94); ctx.fill();
   ctx.fillStyle='#154733'; ctx.font='bold 13px Nunito'; ctx.textAlign='left';
-  ctx.fillText('🏆', x+16, GROUND_Y-106);
+  ctx.fillText('\uD83C\uDFC6', x+16, GROUND_Y-106);
 }
 
+/* ---------- every villain is Mako: a grey cat in a red bandit bandana ---------- */
+function catBody(s, crouch){
+  // shared Mako body, drawn around origin at the cat's center
+  ctx.fillStyle='#3b3b3b';
+  ctx.beginPath(); ctx.ellipse(0,4*s,15*s,(crouch?8:10)*s,0,0,7); ctx.fill();   // body
+  ctx.beginPath(); ctx.arc(13*s,-5*s,8*s,0,7); ctx.fill();                       // head
+  ctx.beginPath(); ctx.moveTo(8*s,-11*s); ctx.lineTo(10*s,-18*s); ctx.lineTo(13*s,-11*s); ctx.fill();   // ears
+  ctx.beginPath(); ctx.moveTo(14*s,-11*s); ctx.lineTo(17*s,-18*s); ctx.lineTo(19*s,-11*s); ctx.fill();
+  ctx.strokeStyle='#3b3b3b'; ctx.lineWidth=3*s;
+  ctx.beginPath(); ctx.moveTo(-14*s,0); ctx.quadraticCurveTo(-23*s,-12*s,-16*s,-18*s); ctx.stroke();    // tail
+  // the red bandit bandana
+  ctx.fillStyle='#b7410e';
+  ctx.beginPath(); ctx.moveTo(7*s,-2*s); ctx.lineTo(19*s,-2*s); ctx.lineTo(13*s,6*s); ctx.closePath(); ctx.fill();
+  // green eyes
+  ctx.fillStyle='#9fe070';
+  ctx.fillRect(13*s,-8*s,3*s,3*s); ctx.fillRect(18*s,-8*s,3*s,3*s);
+}
 function drawEnemy(e){
   ctx.save(); ctx.translate(e.x+e.w/2, e.y+e.h/2);
-  if(e.kind==='goose'){
+  if(e.kind==='prowler'){
     ctx.scale(e.dir,1);
-    ctx.fillStyle='#777';                                  // body
-    ctx.beginPath(); ctx.ellipse(0,4,16,11,0,0,7); ctx.fill();
-    ctx.fillStyle='#222';                                  // neck/head (canada goose!)
-    ctx.fillRect(8,-14,6,16);
-    ctx.beginPath(); ctx.arc(11,-15,6,0,7); ctx.fill();
-    ctx.fillStyle='#fff'; ctx.fillRect(8,-13,7,4);         // chinstrap
-    ctx.fillStyle='#e89b3c'; ctx.fillRect(15,-17,8,4);     // beak
-    ctx.fillStyle='#e89b3c';
-    ctx.fillRect(-4,14,3,6); ctx.fillRect(4,14,3,6);
-  }else if(e.kind==='cloud'){
-    ctx.fillStyle='#6c7a89';
-    ctx.beginPath();
-    ctx.arc(-12,0,12,0,7); ctx.arc(2,-6,14,0,7); ctx.arc(14,2,11,0,7);
-    ctx.fill();
-    ctx.fillStyle='#3f7fb5';
-    const d = (e.t*30)%18;
-    ctx.fillRect(-8, 12+d*0.6, 3,7); ctx.fillRect(6, 10+((d+9)%18)*0.6, 3,7);
-    ctx.fillStyle='#fff'; ctx.fillRect(-9,-4,4,4); ctx.fillRect(5,-7,4,4); // angry eyes
-  }else{
+    catBody(1, false);
+    ctx.fillStyle='#3b3b3b';                                  // legs
+    ctx.fillRect(-9,10,4,7); ctx.fillRect(3,10,4,7);
+  }else if(e.kind==='swooper'){
+    const lean = Math.sin(e.t*.8)*.15;
+    ctx.rotate(lean);
+    ctx.scale(P && P.x < e.x ? -1 : 1, 1);
+    catBody(1, true);
+    // spread paws — mid-pounce
+    ctx.fillStyle='#3b3b3b';
+    ctx.fillRect(-12,8,5,6); ctx.fillRect(6,8,5,6);
+  }else if(e.kind==='tumbler'){
     ctx.rotate(e.t*2*e.dir);
-    ctx.fillStyle='#7a4f2b';
-    ctx.beginPath(); ctx.ellipse(0,0,15,10,0,0,7); ctx.fill();
-    ctx.strokeStyle='#fff'; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.moveTo(-7,0); ctx.lineTo(7,0); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(-4,-3); ctx.lineTo(-4,3); ctx.moveTo(0,-4); ctx.lineTo(0,4); ctx.moveTo(4,-3); ctx.lineTo(4,3); ctx.stroke();
+    // Mako curled into a rolling furball
+    ctx.fillStyle='#3b3b3b';
+    ctx.beginPath(); ctx.arc(0,0,13,0,7); ctx.fill();
+    ctx.strokeStyle='#2a2a2a'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(0,0,8,1,4); ctx.stroke();
+    ctx.fillStyle='#b7410e'; ctx.fillRect(-3,-13,6,5);        // bandana peeking out
+    ctx.fillStyle='#9fe070'; ctx.fillRect(3,-4,3,3);          // one determined eye
+  }else if(e.kind==='boss'){
+    // the REAL Mako — bigger, holding the Golden Duck
+    ctx.scale(P.x < e.x ? 1.8 : -1.8, 1.8);
+    catBody(1, false);
+    ctx.fillStyle='#3b3b3b';
+    ctx.fillRect(-9,10,4,8); ctx.fillRect(3,10,4,8);
+    // the stolen Golden Duck under one paw
+    ctx.fillStyle='#FEE123';
+    ctx.beginPath(); ctx.ellipse(-6,12,7,5,0,0,7); ctx.fill();
+    ctx.beginPath(); ctx.arc(-11,7,3.5,0,7); ctx.fill();
+    ctx.fillStyle='#e8930c'; ctx.fillRect(-15,6,4,2);
   }
-  ctx.restore();
-}
-
-function drawMako(){
-  ctx.save(); ctx.translate(mako.x, mako.y);
-  const hop = Math.abs(Math.sin(mako.t*2))* (Math.abs(mako.vx)>0.5?5:0);
-  ctx.translate(0,-hop);
-  ctx.fillStyle='#3b3b3b';
-  ctx.beginPath(); ctx.ellipse(0,0,13,8,0,0,7); ctx.fill();      // body
-  ctx.beginPath(); ctx.arc(11,-6,7,0,7); ctx.fill();             // head
-  ctx.beginPath(); ctx.moveTo(7,-11); ctx.lineTo(9,-17); ctx.lineTo(11,-11); ctx.fill();  // ears
-  ctx.beginPath(); ctx.moveTo(12,-11); ctx.lineTo(14,-17); ctx.lineTo(16,-11); ctx.fill();
-  ctx.strokeStyle='#3b3b3b'; ctx.lineWidth=3;
-  ctx.beginPath(); ctx.moveTo(-12,-2); ctx.quadraticCurveTo(-20,-14,-14,-18); ctx.stroke(); // tail
-  ctx.fillStyle='#9fe070'; ctx.fillRect(12,-8,2,2); ctx.fillRect(16,-8,2,2);                // eyes
   ctx.restore();
 }
 
@@ -854,60 +932,99 @@ function drawPlayer(){
   ctx.save();
   ctx.translate(P.x+P.w/2, P.y);
   ctx.scale(P.face,1);
-  const step = P.onGround && Math.abs(P.vx)>.5 ? Math.sin(P.walkT*.4)*5 : 0;
-  const isMeg = P.char==='meg';
 
-  // legs — Meg gets her green & yellow striped overalls!
-  if(isMeg){
-    ctx.fillStyle='#FEE123'; ctx.fillRect(-11,34,9,22+step*.4);
-    ctx.fillStyle='#154733'; ctx.fillRect(2,34,9,22-step*.4);
+  const isMeg  = P.char==='meg';
+  const moving = P.onGround && Math.abs(P.vx)>.5;
+  const air    = !P.onGround;
+  const t      = P.walkT*.45;
+  const sw     = moving ? Math.sin(t) : 0;                        // stride swing -1..1
+  const bob    = moving ? Math.abs(Math.cos(t))*2.4               // running bounce
+               : air    ? 0
+               : Math.sin(performance.now()/420)*1.1;             // idle breathing
+  const lean   = moving ? 0.06 : 0;                               // lean into the run
+  ctx.rotate(lean);
+
+  const skin = '#e8c5a8';
+  const legA = isMeg ? '#FEE123' : '#3a5fa3';
+  const legB = isMeg ? '#154733' : '#3a5fa3';
+
+  /* ---- legs ---- */
+  if(air){
+    // jump: legs tucked and split, like clearing a hurdle at Hayward
+    ctx.fillStyle=legA;
+    ctx.save(); ctx.translate(-7,34); ctx.rotate(-.55); ctx.fillRect(-4,0,9,16); ctx.restore();
+    ctx.fillStyle=legB;
+    ctx.save(); ctx.translate(7,34); ctx.rotate(.4); ctx.fillRect(-4,0,9,13); ctx.restore();
   }else{
-    ctx.fillStyle='#3a5fa3'; // jeans
-    ctx.fillRect(-11,34,9,22+step*.4); ctx.fillRect(2,34,9,22-step*.4);
+    // walk cycle: legs scissor with a real stride
+    ctx.fillStyle=legA;
+    ctx.save(); ctx.translate(-5,34); ctx.rotate(sw*.5); ctx.fillRect(-4,0,9,22); ctx.restore();
+    ctx.fillStyle=legB;
+    ctx.save(); ctx.translate(5,34); ctx.rotate(-sw*.5); ctx.fillRect(-4,0,9,22); ctx.restore();
   }
-  // torso
-  ctx.fillStyle = isMeg ? '#6b6b45' : '#4a2c33';       // olive tee / brown tank
+
+  ctx.translate(0,bob);   // bounce carries through torso, arms, and head
+
+  /* ---- torso ---- */
+  ctx.fillStyle = isMeg ? '#6b6b45' : '#4a2c33';
   ctx.fillRect(-13,12,26,24);
-  if(isMeg){                                            // overall straps
+  if(isMeg){
     ctx.fillStyle='#FEE123'; ctx.fillRect(-11,12,5,22);
     ctx.fillStyle='#154733'; ctx.fillRect(6,12,5,22);
   }
-  // arms + whip
-  ctx.fillStyle = '#e8c5a8';
+
+  /* ---- arms ---- */
   if(P.attackT>0){
-    ctx.fillRect(10,16,18,6);                           // extended arm
+    // whip crack
+    ctx.fillStyle=skin;
+    ctx.fillRect(10,16,18,6);
+    ctx.save(); ctx.translate(-14,16); ctx.rotate(.5); ctx.fillRect(-3,0,6,14); ctx.restore();  // back arm braces
     const ext = (22-P.attackT)/22;
-    ctx.strokeStyle = isMeg ? '#154733' : '#b7410e';
+    ctx.strokeStyle = '#5e3a1e';
     ctx.lineWidth=3; ctx.beginPath();
     ctx.moveTo(28,19);
     ctx.quadraticCurveTo(28+30*ext, 8, 28+52*ext, 16+Math.sin(P.attackT)*8);
     ctx.stroke();
+  }else if(air){
+    // jump: arms thrown up and back
+    ctx.fillStyle=skin;
+    ctx.save(); ctx.translate(-14,14); ctx.rotate(2.4); ctx.fillRect(-3,0,6,15); ctx.restore();
+    ctx.save(); ctx.translate(14,14);  ctx.rotate(-2.0); ctx.fillRect(-3,0,6,15); ctx.restore();
   }else{
-    ctx.fillRect(-17,16,6,16); ctx.fillRect(11,16,6,16);
+    // arms swing opposite the legs
+    ctx.fillStyle=skin;
+    ctx.save(); ctx.translate(-14,16); ctx.rotate(-sw*.6); ctx.fillRect(-3,0,6,16); ctx.restore();
+    ctx.save(); ctx.translate(14,16);  ctx.rotate(sw*.6);  ctx.fillRect(-3,0,6,16); ctx.restore();
   }
-  // head
-  ctx.fillStyle='#e8c5a8';
+
+  /* ---- head ---- */
+  ctx.fillStyle=skin;
   ctx.beginPath(); ctx.arc(0,2,11,0,7); ctx.fill();
-  // hair
+
+  /* ---- hair (trails behind with motion) ---- */
+  const trail = moving ? -1.6 : air ? -2.5 : 0;   // hair streams back when moving/jumping
   if(isMeg){
-    ctx.fillStyle='#5b3a26';                            // long curly brown
+    ctx.fillStyle='#5b3a26';
     ctx.beginPath(); ctx.arc(0,-3,12,Math.PI*0.9,Math.PI*2.1); ctx.fill();
     for(let i=0;i<4;i++){
-      ctx.beginPath(); ctx.arc(-11,3+i*7,5,0,7); ctx.fill();
-      ctx.beginPath(); ctx.arc(-8,7+i*7,4,0,7); ctx.fill();
+      const wiggle = moving ? Math.sin(t+i)*1.4 : air ? -2 : Math.sin(performance.now()/500+i)*.6;
+      ctx.beginPath(); ctx.arc(-11+trail+wiggle,3+i*7,5,0,7); ctx.fill();
+      ctx.beginPath(); ctx.arc(-8+trail+wiggle,7+i*7,4,0,7); ctx.fill();
     }
   }else{
-    ctx.fillStyle='#d9b87a';                            // blonde
+    ctx.fillStyle='#d9b87a';
     ctx.beginPath(); ctx.arc(0,-3,12,Math.PI*0.9,Math.PI*2.1); ctx.fill();
-    ctx.fillRect(-12,-3,6,22); ctx.fillRect(7,-3,6,18);
+    const flick = moving ? Math.sin(t)*1.5 : air ? -2 : Math.sin(performance.now()/500)*.6;
+    ctx.save(); ctx.translate(-9+trail,-3); ctx.rotate(flick*.08); ctx.fillRect(-3,0,6,22); ctx.restore();
+    ctx.save(); ctx.translate(10,-3); ctx.rotate(-flick*.06); ctx.fillRect(-3,0,6,18); ctx.restore();
   }
-  // face
+
+  /* ---- face ---- */
   ctx.fillStyle='#1d2a23';
   ctx.fillRect(3,-1,3,3);
   ctx.fillStyle='#c77'; ctx.fillRect(2,6,6,2);
   ctx.restore();
 }
-
 </script>
 </body>
 </html>
